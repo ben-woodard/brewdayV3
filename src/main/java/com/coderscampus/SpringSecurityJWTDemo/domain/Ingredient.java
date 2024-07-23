@@ -19,9 +19,6 @@ public class Ingredient {
     private List<Recipe> recipes = new ArrayList<>();
     private Double amountInStock;
     private Double orderingThreshold;
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
     @Enumerated(EnumType.STRING)
     @Column(name = "ingredientType")
     private ingredientType ingredientType;

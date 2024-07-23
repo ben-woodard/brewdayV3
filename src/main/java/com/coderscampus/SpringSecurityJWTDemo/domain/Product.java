@@ -31,6 +31,10 @@ public class Product {
 	@JsonIgnoreProperties("product")
 	private List<Batch> batches = new ArrayList<>();
 	private String selectedRecipe;
+	@OneToMany(mappedBy = "product", orphanRemoval = true, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+	@JsonIgnoreProperties("product")
+	private List<Turn> turns = new ArrayList<>();
+
 
 	@Override
 	public String toString() {
