@@ -1,10 +1,12 @@
 package com.coderscampus.SpringSecurityJWTDemo.domain;
 
 import jakarta.persistence.*;
-
+import lombok.Data;
 import java.time.Instant;
 
 @Entity
+@Data
+
 public class RefreshToken {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -20,36 +22,36 @@ public class RefreshToken {
     @Column(nullable = false)
     private Instant expiryDate;
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    public Instant getExpiryDate() {
-        return expiryDate;
-    }
-
-    public void setExpiryDate(Instant expiryDate) {
-        this.expiryDate = expiryDate;
-    }
+//    public long getId() {
+//        return id;
+//    }
+//
+//    public void setId(long id) {
+//        this.id = id;
+//    }
+//
+//    public User getUser() {
+//        return user;
+//    }
+//
+//    public void setUser(User user) {
+//        this.user = user;
+//    }
+//
+//    public String getToken() {
+//        return token;
+//    }
+//
+//    public void setToken(String token) {
+//        this.token = token;
+//    }
+//
+//    public Instant getExpiryDate() {
+//        return expiryDate;
+//    }
+//
+//    public void setExpiryDate(Instant expiryDate) {
+//        this.expiryDate = expiryDate;
+//    }
 
 }
