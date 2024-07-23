@@ -117,8 +117,7 @@ public class User implements UserDetails {
     public void setPassword(String password) {
         this.password = password;
     }
-
-
+    
     public User build () {
         return this;
     }
