@@ -5,6 +5,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import com.coderscampus.SpringSecurityJWTDemo.dao.request.SignUpRequest;
@@ -37,11 +39,11 @@ public class UserController {
 	}
 
 
-//	@GetMapping("/register")
-//	public String getRegistration (ModelMap model) {
-//		model.addAttribute("user", new User());
-//		return "registration";
-//	}
+	@GetMapping("/register")
+	public String getRegistration (ModelMap model) {
+		model.addAttribute("user", new User());
+		return "registration";
+	}
 	
 	
 	@PostMapping("/register")
