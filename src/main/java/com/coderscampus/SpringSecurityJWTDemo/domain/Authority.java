@@ -4,10 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 @Entity
-@ToString
 @Data
 @EqualsAndHashCode
-@NoArgsConstructor
 @AllArgsConstructor
 public class Authority implements GrantedAuthority {
     @Getter
@@ -19,28 +17,23 @@ public class Authority implements GrantedAuthority {
     @JoinColumn(name = "user_id")
     private User user;
 
-    public Authority(String authority, User user) {
+
+    public Authority () {}
+
+    public Authority(String authority) {
+		super();
+		this.authority = authority;
+	}
+
+	public Authority(String auth, User user) {
+        this.authority = auth;
+        this.user = user;
     }
 
-    public Authority(String roleAdmin) {
-    }
-
-//    public Authority () {}
-
-//    public Authority(String authority) {
-//		super();
-//		this.authority = authority;
-//	}
-//
-//	public Authority(String auth, User user) {
-//        this.authority = auth;
-//        this.user = user;
-//    }
-
-//    @Override
-//	public String toString() {
-//		return "Authority [id=" + id + ", authority=" + authority + ", user=" + user + "]";
-//	}
+    @Override
+	public String toString() {
+		return "Authority [id=" + id + ", authority=" + authority + "]";
+	}
 //
 //	@Override
 //    public boolean equals(Object o) {
