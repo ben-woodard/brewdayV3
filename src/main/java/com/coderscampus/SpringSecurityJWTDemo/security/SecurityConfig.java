@@ -106,6 +106,7 @@ public class SecurityConfig {
 					    	response.addCookie(accessTokenCookie);
 							response.addCookie(refreshTokenCookie);
 					    	response.sendRedirect("/success");
+
 						}
 					})
 		        	.failureHandler(new AuthenticationFailureHandler() {

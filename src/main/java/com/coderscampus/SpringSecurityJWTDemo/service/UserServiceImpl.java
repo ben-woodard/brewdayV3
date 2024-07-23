@@ -14,7 +14,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.coderscampus.SpringSecurityJWTDemo.repository.UserRepository;
-import com.coderscampus.SpringSecurityJWTDemo.web.RegistrationController;
 
 import jakarta.transaction.Transactional;
 
