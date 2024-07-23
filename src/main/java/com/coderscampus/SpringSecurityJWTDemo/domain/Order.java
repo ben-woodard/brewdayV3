@@ -13,6 +13,7 @@ import java.util.Map;
 @Entity
 @Data
 @NoArgsConstructor
+@Table(name = "company_orders")
 public class Order {
 
     @Id
