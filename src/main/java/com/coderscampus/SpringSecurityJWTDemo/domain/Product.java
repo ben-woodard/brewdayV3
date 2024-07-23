@@ -1,10 +1,21 @@
 package com.coderscampus.SpringSecurityJWTDemo.domain;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.math.BigDecimal;
 
-public record Product (Integer id, String name, BigDecimal price){
-    
-	/*
-	 * THIS CLASS IS FOR TESTING PURPOSES ONLY
-	 */
+@Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class Product {
+
+	@Id
+	private Long id;
+	private String name;
+	private BigDecimal price;
 }
