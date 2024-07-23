@@ -19,7 +19,7 @@ import com.coderscampus.SpringSecurityJWTDemo.domain.User;
 import com.coderscampus.SpringSecurityJWTDemo.security.AuthenticationServiceImpl;
 import com.coderscampus.SpringSecurityJWTDemo.security.JwtService;
 import com.coderscampus.SpringSecurityJWTDemo.service.RefreshTokenService;
-import com.coderscampus.SpringSecurityJWTDemo.service.UserServiceImpl;
+import com.coderscampus.SpringSecurityJWTDemo.service.impl.UserServiceImpl;
 
 //@RestController
 //@RequestMapping("/api/v1/auth") 

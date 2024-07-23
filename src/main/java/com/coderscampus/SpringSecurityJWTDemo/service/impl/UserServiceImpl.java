@@ -1,8 +1,9 @@
-package com.coderscampus.SpringSecurityJWTDemo.service;
+package com.coderscampus.SpringSecurityJWTDemo.service.impl;
 
 import com.coderscampus.SpringSecurityJWTDemo.domain.Authority;
 import com.coderscampus.SpringSecurityJWTDemo.domain.User;
 
+import com.coderscampus.SpringSecurityJWTDemo.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.annotation.Secured;

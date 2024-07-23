@@ -15,7 +15,7 @@ import com.coderscampus.SpringSecurityJWTDemo.domain.User;
 import com.coderscampus.SpringSecurityJWTDemo.security.AuthenticationServiceImpl;
 import com.coderscampus.SpringSecurityJWTDemo.security.JwtServiceImpl;
 import com.coderscampus.SpringSecurityJWTDemo.service.RefreshTokenService;
-import com.coderscampus.SpringSecurityJWTDemo.service.UserServiceImpl;
+import com.coderscampus.SpringSecurityJWTDemo.service.impl.UserServiceImpl;
 
 @Controller
 public class UserController {
