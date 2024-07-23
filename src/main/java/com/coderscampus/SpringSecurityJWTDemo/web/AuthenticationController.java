@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import com.coderscampus.SpringSecurityJWTDemo.dao.request.RefreshTokenRequest;
-import com.coderscampus.SpringSecurityJWTDemo.dao.request.SignInRequest;
-import com.coderscampus.SpringSecurityJWTDemo.dao.response.JwtAuthenticationResponse;
-import com.coderscampus.SpringSecurityJWTDemo.dao.response.TokenRefreshResponse;
+import com.coderscampus.SpringSecurityJWTDemo.dto.request.RefreshTokenRequest;
+import com.coderscampus.SpringSecurityJWTDemo.dto.request.SignInRequest;
+import com.coderscampus.SpringSecurityJWTDemo.dto.response.JwtAuthenticationResponse;
+import com.coderscampus.SpringSecurityJWTDemo.dto.response.TokenRefreshResponse;
 import com.coderscampus.SpringSecurityJWTDemo.domain.RefreshToken;
 import com.coderscampus.SpringSecurityJWTDemo.domain.User;
 import com.coderscampus.SpringSecurityJWTDemo.security.AuthenticationServiceImpl;

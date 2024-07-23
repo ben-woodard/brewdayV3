@@ -14,7 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.coderscampus.SpringSecurityJWTDemo.dao.request.RefreshTokenRequest;
+import com.coderscampus.SpringSecurityJWTDemo.dto.request.RefreshTokenRequest;
 import com.coderscampus.SpringSecurityJWTDemo.service.RefreshTokenService;
 import com.coderscampus.SpringSecurityJWTDemo.service.impl.UserServiceImpl;
 import com.coderscampus.SpringSecurityJWTDemo.util.CookieUtils;

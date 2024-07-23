@@ -1,8 +1,8 @@
 package com.coderscampus.SpringSecurityJWTDemo.security;
 
-import com.coderscampus.SpringSecurityJWTDemo.dao.request.SignInRequest;
-import com.coderscampus.SpringSecurityJWTDemo.dao.request.SignUpRequest;
-import com.coderscampus.SpringSecurityJWTDemo.dao.response.JwtAuthenticationResponse;
+import com.coderscampus.SpringSecurityJWTDemo.dto.request.SignInRequest;
+import com.coderscampus.SpringSecurityJWTDemo.dto.request.SignUpRequest;
+import com.coderscampus.SpringSecurityJWTDemo.dto.response.JwtAuthenticationResponse;
 
 public interface AuthenticationService {
     JwtAuthenticationResponse signup(SignUpRequest request);

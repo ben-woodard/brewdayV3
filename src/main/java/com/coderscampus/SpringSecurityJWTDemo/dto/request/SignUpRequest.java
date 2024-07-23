@@ -1,4 +1,4 @@
-package com.coderscampus.SpringSecurityJWTDemo.dao.request;
+package com.coderscampus.SpringSecurityJWTDemo.dto.request;
 
 import java.util.Optional;
 

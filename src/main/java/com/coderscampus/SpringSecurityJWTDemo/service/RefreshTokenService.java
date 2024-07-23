@@ -5,11 +5,10 @@ import java.util.HashMap;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.coderscampus.SpringSecurityJWTDemo.dao.request.RefreshTokenRequest;
+import com.coderscampus.SpringSecurityJWTDemo.dto.request.RefreshTokenRequest;
 import com.coderscampus.SpringSecurityJWTDemo.domain.RefreshToken;
 import com.coderscampus.SpringSecurityJWTDemo.repository.RefreshTokenRepository;
 import com.coderscampus.SpringSecurityJWTDemo.repository.UserRepository;
