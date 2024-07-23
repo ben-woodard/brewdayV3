@@ -3,6 +3,7 @@ package com.coderscampus.SpringSecurityJWTDemo.domain;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
+
 @Entity
 @Data
 @EqualsAndHashCode
@@ -34,34 +35,4 @@ public class Authority implements GrantedAuthority {
 	public String toString() {
 		return "Authority [id=" + id + ", authority=" + authority + "]";
 	}
-//
-//	@Override
-//    public boolean equals(Object o) {
-//        if (this == o) return true;
-//        if (o == null || getClass() != o.getClass()) return false;
-//        Authority authority = (Authority) o;
-//        return Objects.equals(id, authority.id);
-//    }
-//
-//    @Override
-//    public int hashCode() {
-//        return Objects.hash(id);
-//    }
-//
-//    public void setId(Long id) {
-//        this.id = id;
-//    }
-//
-//    public void setUser(User user) {
-//        this.user = user;
-//    }
-//
-//    @Override
-//    public String getAuthority() {
-//        return authority;
-//    }
-//
-//    public void setAuthority(String authority) {
-//        this.authority = authority;
-//    }
 }
