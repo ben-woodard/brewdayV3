@@ -17,7 +17,7 @@ public class Batch {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long batchId;
+    private Long batchId;
     private Integer batchNumber;
     private Integer numberOfTurns;
     private LocalDate startDate;
@@ -25,7 +25,7 @@ public class Batch {
     private String tankName;
     private Boolean turnsComplete;
     private Boolean batchComplete;
-    private Long selectedRecipeId;
+//    private Long selectedRecipeId;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
