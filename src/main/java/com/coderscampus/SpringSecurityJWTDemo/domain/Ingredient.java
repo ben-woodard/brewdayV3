@@ -17,7 +17,7 @@ public class Ingredient {
     private String ingredientName;
     @ManyToMany(mappedBy = "ingredients", cascade = {CascadeType.MERGE, CascadeType.REMOVE})
     private List<Recipe> recipes = new ArrayList<>();
-    @ManyToMany(mappedBy = "orders", cascade = {CascadeType.MERGE, CascadeType.REMOVE})
+    @ManyToMany(mappedBy = "ingredients", cascade = {CascadeType.MERGE, CascadeType.REMOVE})
     private List<Recipe> orders = new ArrayList<>();
     private Double amountInStock;
     private Double orderingThreshold;
