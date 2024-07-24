@@ -19,15 +19,23 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class User implements UserDetails {
     @Serial
     private static final long serialVersionUID = 2025389852147750927L;
+    @Setter
     @Getter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @Setter
     private String firstName;
+    @Setter
     @Getter
     private String lastName;
     @Getter
+    @Setter
+    private String companyName;
+    @Setter
+    @Getter
     private String email;
+    @Setter
     private String password;
     @Setter
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -101,26 +109,6 @@ public class User implements UserDetails {
         return this;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-    
     public User build () {
         return this;
     }
