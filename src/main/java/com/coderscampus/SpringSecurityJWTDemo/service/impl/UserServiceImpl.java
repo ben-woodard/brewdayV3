@@ -39,11 +39,11 @@ public class UserServiceImpl implements UserService {
             public UserDetails loadUserByUsername(String username) {
             	User user = userRepository.findByEmail(username)
             			.orElseThrow(() -> new UsernameNotFoundException("User not found" + username));
-            	
+
             	List<GrantedAuthority> grantedAuthorities = user.getAuthorities().stream()
             			.map(auth -> new SimpleGrantedAuthority(auth.getAuthority()))
             			.collect(Collectors.toList());
-            	
+
             	return user;
             }
         };
@@ -99,5 +99,17 @@ public class UserServiceImpl implements UserService {
     
     public User updateUser(User user) {
     	return userRepository.save(user);
+    }
+
+    public User loadUserByUsername(String username) {
+        User user = userRepository.findByEmail(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found" + username));
+
+        List<GrantedAuthority> grantedAuthorities = user.getAuthorities().stream()
+                .map(auth -> new SimpleGrantedAuthority(auth.getAuthority()))
+                .collect(Collectors.toList());
+
+        return user;
+
     }
 }
