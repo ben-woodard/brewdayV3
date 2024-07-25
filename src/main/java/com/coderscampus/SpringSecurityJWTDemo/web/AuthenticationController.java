@@ -52,13 +52,6 @@ public class AuthenticationController {
         return "login";
     }
 
-    @PostMapping("/signin")
-    public String signin (@RequestBody SignInRequest request) {
-        System.out.println(request);
-        System.out.println(request);
-        return "Fuck You";
-    }
-
 //    @PostMapping("/signin")
 //    public ResponseEntity<JwtAuthenticationResponse> signin(@RequestBody SignInRequest request, @RequestBody User user) {
 //        System.out.println(user);
