@@ -1,7 +1,8 @@
 package com.coderscampus.SpringSecurityJWTDemo.web;
 
-import com.coderscampus.SpringSecurityJWTDemo.dto.response.JwtAuthenticationResponse;
+import com.coderscampus.SpringSecurityJWTDemo.mappers.UserMapper;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.stereotype.Controller;
@@ -43,10 +44,18 @@ public class AuthenticationController {
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<JwtAuthenticationResponse> signin(@RequestBody SignInRequest request) {
-//    	Optional<User> existingUser = userService.findUserByEmail(request.email());
-//    	String accessToken = jwtService.generateToken(user);
-        return ResponseEntity.ok(authenticationService.signin(request));
+    public ResponseEntity<Object> signin(@RequestBody SignInRequest request) {
+    	Optional<User> existingUser = userService.findUserByEmail(request.email());
+        if(existingUser.isPresent()){
+            User user = existingUser.get();
+            String accessToken = jwtService.generateToken(user);
+            authenticationService.signin(request);
+            return ResponseEntity.ok(user);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not found");
+        }
+
+
     }
 
 
