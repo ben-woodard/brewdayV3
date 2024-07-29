@@ -83,37 +83,32 @@ public class SecurityConfig {
 		        	.loginPage("/signin")
 //		        	.failureUrl("/failure"); // this can be linked to a failure message on the failure template
 		        	.usernameParameter("email")
-		        	.successHandler(new AuthenticationSuccessHandler() {
-						
-						@Override
-						public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-								Authentication authentication) throws IOException, ServletException {
-							
-							//HttpServletResponseWrapper ensures that the cookie is set only when the authentication is successful
-							response = new HttpServletResponseWrapper(response);
-							User user = (User) authentication.getPrincipal();
-					    	String accessToken = jwtService.generateToken(new HashMap<>(), user);
-					    	RefreshToken refreshToken = refreshTokenService.createRefreshToken(user.getId());
+		        	.successHandler((request, response, authentication) -> {
 
-					    	Cookie accessTokenCookie = CookieUtils.createAccessTokenCookie(accessToken);
-					    	Cookie refreshTokenCookie = CookieUtils.createRefreshTokenCookie(refreshToken.getToken());
-					    	
-							logger.info("Successful authentication for: " + user.getUsername());
-							logger.info("Access Cookie: " + accessTokenCookie.getValue());
-							logger.info("Refresh Cookie: " + refreshTokenCookie.getValue());
-					    	logger.info("Role for " + user.getUsername() + " is: " + user.authority(accessToken).toString());
-							logger.info("Successful authentication for: " + user.getUsername());
-							logger.info("Access Cookie: " + accessTokenCookie.getValue());
-							logger.info("Refresh Cookie: " + refreshTokenCookie.getValue());
-					    	logger.info("Role for " + user.getUsername() + " is: " + user.authority(accessToken).toString());
-//					    	
-					    	response.addCookie(accessTokenCookie);
-							response.addCookie(refreshTokenCookie);
-					    	response.sendRedirect("/success");
-							System.out.println("Hello World");
+                        //HttpServletResponseWrapper ensures that the cookie is set only when the authentication is successful
+                        response = new HttpServletResponseWrapper(response);
+                        User user = (User) authentication.getPrincipal();
+                        String accessToken = jwtService.generateToken(new HashMap<>(), user);
+                        RefreshToken refreshToken = refreshTokenService.createRefreshToken(user.getId());
 
-						}
-					})
+                        Cookie accessTokenCookie = CookieUtils.createAccessTokenCookie(accessToken);
+                        Cookie refreshTokenCookie = CookieUtils.createRefreshTokenCookie(refreshToken.getToken());
+
+                        logger.info("Successful authentication for: " + user.getUsername());
+                        logger.info("Access Cookie: " + accessTokenCookie.getValue());
+                        logger.info("Refresh Cookie: " + refreshTokenCookie.getValue());
+                        logger.info("Role for " + user.getUsername() + " is: " + user.authority(accessToken).toString());
+                        logger.info("Successful authentication for: " + user.getUsername());
+                        logger.info("Access Cookie: " + accessTokenCookie.getValue());
+                        logger.info("Refresh Cookie: " + refreshTokenCookie.getValue());
+                        logger.info("Role for " + user.getUsername() + " is: " + user.authority(accessToken).toString());
+//
+                        response.addCookie(accessTokenCookie);
+                        response.addCookie(refreshTokenCookie);
+                        response.sendRedirect("/success");
+                        System.out.println("Hello World");
+
+                    })
 		        	.failureHandler(new AuthenticationFailureHandler() {
 						
 						@Override
