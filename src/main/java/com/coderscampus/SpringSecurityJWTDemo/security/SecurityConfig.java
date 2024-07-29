@@ -80,7 +80,7 @@ public class SecurityConfig {
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .formLogin(login -> {login
-		        	.loginPage("/signin")
+		        	.loginPage("http://localhost:4200")
 //		        	.failureUrl("/failure"); // this can be linked to a failure message on the failure template
 		        	.usernameParameter("email")
 		        	.successHandler((request, response, authentication) -> {
@@ -130,7 +130,7 @@ public class SecurityConfig {
 		        })
                 .logout(logoutConfigurer -> {logoutConfigurer
                 	.logoutUrl("/logout")
-                	.logoutSuccessUrl("/signin")
+                	.logoutSuccessUrl("http://localhost:4200")
                 	// delete cookies from client after logout
                 	.deleteCookies("accessToken") 
                 	.deleteCookies("refreshToken")
