@@ -69,9 +69,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         var refreshTokenOpt = refreshTokenService.findByToken(jwt);
         
         logger.info("Raw password during login: {}", "Encoded password during login: {}", request.password(), user.getPassword());
-        
         if (refreshTokenOpt.isPresent()) {
-            return new JwtAuthenticationResponse(jwt, refreshTokenOpt.get().getToken()); 
+            return new JwtAuthenticationResponse(jwt, refreshTokenOpt.get().getToken());
         } else {
             return new JwtAuthenticationResponse(jwt, refreshTokenService.createRefreshToken(user.getId()).getToken());
         }
