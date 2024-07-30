@@ -1,32 +1,43 @@
 package com.coderscampus.SpringSecurityJWTDemo;
 
 import com.coderscampus.SpringSecurityJWTDemo.domain.Ingredient;
+import com.coderscampus.SpringSecurityJWTDemo.domain.Role;
 import com.coderscampus.SpringSecurityJWTDemo.domain.User;
+import com.coderscampus.SpringSecurityJWTDemo.dto.request.SignUpRequest;
 import com.coderscampus.SpringSecurityJWTDemo.repository.IngredientRepository;
 import com.coderscampus.SpringSecurityJWTDemo.repository.UserRepository;
+import com.coderscampus.SpringSecurityJWTDemo.security.AuthenticationService;
+import com.coderscampus.SpringSecurityJWTDemo.security.AuthenticationServiceImpl;
+import com.coderscampus.SpringSecurityJWTDemo.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 @Component
 @AllArgsConstructor
 public class Seeder implements CommandLineRunner {
     private final IngredientRepository ingredientRepo;
     private final UserRepository userRepo;
+    private final UserService userService;
+    private final AuthenticationServiceImpl authenticationService;
 
     @Override
     public void run(String... args) throws Exception {
 
-        User user1 = new User();
-        user1.setFirstName("Joe");
-        user1.setLastName("Schmo");
-        user1.setCompanyName("Joe's Brewing");
-        user1.setEmail("joe@joe.com");
-        user1.setPassword("vvvv");
+        SignUpRequest signUp = new SignUpRequest(
+                "joe@joe.com",
+                "vvvvv",
+                "Joe",
+                "Schmo",
+                "Joes Brewing",
+                Optional.of("")
+        );
 
-        userRepo.saveAndFlush(user1);
+        authenticationService.signup(signUp);
+        User user1 = userRepo.findById(1).orElse(null);
 
         Ingredient ingredient1 = new Ingredient();
         ingredient1.setIngredientName("2-Row Barley");
@@ -52,6 +63,7 @@ public class Seeder implements CommandLineRunner {
         ingredient3.setUnitOfMeasurement(Ingredient.unitOfMeasurement.lBS);
         ingredient3.setUser(user1);
 
+        assert user1 != null;
         user1.getIngredients().addAll(Arrays.asList(
                 new Ingredient[]{ingredient1, ingredient2, ingredient3}));
 
