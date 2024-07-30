@@ -54,7 +54,7 @@ public class UserServiceImpl implements UserService {
     public List<User> findAll() {
         return userRepository.findAll();
     }
-    
+
     @Secured("ROLE_ADMIN")
     @Transactional // This annotation ensures that changes are committed to the database
     public void elevateUserToAdmin(Integer userId) {
@@ -92,24 +92,21 @@ public class UserServiceImpl implements UserService {
     public Optional<User> findUserByEmail(String email) {
     	return userRepository.findByEmail(email);
     }
-    
-    public Optional<User> findUserById(Integer userId) {
-    	return userRepository.findById(userId);
-    }
-    
-    public User updateUser(User user) {
-    	return userRepository.save(user);
+
+    @Override
+    public User findById(Integer userId) {
+        return userRepository.findById(userId).orElse(null);
     }
 
-    public User loadUserByUsername(String username) {
-        User user = userRepository.findByEmail(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found" + username));
-
-        List<GrantedAuthority> grantedAuthorities = user.getAuthorities().stream()
-                .map(auth -> new SimpleGrantedAuthority(auth.getAuthority()))
-                .collect(Collectors.toList());
-
-        return user;
-
-    }
+//    public User loadUserByUsername(String username) {
+//        User user = userRepository.findByEmail(username)
+//                .orElseThrow(() -> new UsernameNotFoundException("User not found" + username));
+//
+//        List<GrantedAuthority> grantedAuthorities = user.getAuthorities().stream()
+//                .map(auth -> new SimpleGrantedAuthority(auth.getAuthority()))
+//                .collect(Collectors.toList());
+//
+//        return user;
+//
+//    }
 }
