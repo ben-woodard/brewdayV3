@@ -27,6 +27,9 @@ public class Ingredient {
     @Enumerated(EnumType.STRING)
     @Column(name = "unitOfMeasurement")
     private unitOfMeasurement unitOfMeasurement;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     public enum ingredientType {
         MALT,
