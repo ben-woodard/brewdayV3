@@ -12,7 +12,9 @@ public class IngredientDto {
 
     private String ingredientName;
 
-    private String amountInStock;
+    private Double amountInStock;
+
+    private Double orderingThreshold;
 
     private Ingredient.ingredientType ingredientType;
 

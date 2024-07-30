@@ -1,9 +1,8 @@
 package com.coderscampus.SpringSecurityJWTDemo.web;
 
+import com.coderscampus.SpringSecurityJWTDemo.dto.IngredientDto;
 import com.coderscampus.SpringSecurityJWTDemo.service.IngredientService;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -23,11 +22,10 @@ public class InventoryController {
 //        return "ingredient/home";
 //    }
 
-//    @PostMapping("{userId}/create")
-//    public String postCreateIngredient(@ModelAttribute Ingredient ingredient, @PathVariable Integer userId) {
-//        ingredientService.saveIngredientUserRelationship(ingredient, userId);
-//        return "redirect:/inventory/{userId}/home";
-//    }
+    @PostMapping("{userId}")
+    public IngredientDto postCreateIngredient(@RequestBody IngredientDto ingredientDto, @PathVariable Integer userId) {
+        return ingredientService.saveIngredient(ingredientDto, userId);
+    }
 //
 //    @GetMapping("/{userId}/{ingredientId}")
 //    public String getIngredientInfoById(@PathVariable Long ingredientId, ModelMap model, @PathVariable Integer userId) {
