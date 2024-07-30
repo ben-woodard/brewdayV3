@@ -47,6 +47,9 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JsonIgnoreProperties("user")
     private List<Order> orders = new ArrayList<>();
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JsonIgnoreProperties("user")
+    private List<Ingredient> ingredients = new ArrayList<>();
 
     @Override
     public Collection<Authority> getAuthorities() {
