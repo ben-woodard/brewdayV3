@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -41,10 +42,8 @@ public class IngredientServiceImpl implements IngredientService {
             throw new RuntimeException("User Not Found");
         }
         List<Ingredient> ingredients = ingredientRepo.findAllByUser(user);
-        for(Ingredient i : ingredients) {
-            System.out.println(i);
-        }
-        return ingredientMapper.entityListToDtoList(ingredientRepo.findAllByUser(user));
+        ingredients.sort(Comparator.comparing(Ingredient::getIngredientName));
+        return ingredientMapper.entityListToDtoList(ingredients);
     }
 
 }
