@@ -5,6 +5,8 @@ import com.coderscampus.SpringSecurityJWTDemo.service.IngredientService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @AllArgsConstructor
 @RequestMapping("/inventory")
@@ -13,16 +15,12 @@ public class InventoryController {
     private final IngredientService ingredientService;
 //    private final UserServiceImpl userService;
 
-//    @GetMapping("{userId}/home")
-//    public String getUserInventoryHome(@PathVariable Integer userId, ModelMap model) {
-//        User user = userService.findUserById(userId).orElse(null);
-//        model.addAttribute("ingredient", new Ingredient());
-//        model.addAttribute("ingredientsList", ingredientService.findAllIngredientsByUserSorted(user));
-//        model.addAttribute("user", user);
-//        return "ingredient/home";
-//    }
+    @GetMapping("{userId}")
+    public List<IngredientDto> getAllIngredientsByUser(@PathVariable Integer userId) {
+        return ingredientService.findAllByUser(userId);
+    }
 
-    @PostMapping("/{userId}")
+    @PostMapping("/{userId}/create")
     public IngredientDto postCreateIngredient(@RequestBody IngredientDto ingredientDto, @PathVariable Integer userId) {
         return ingredientService.saveIngredient(ingredientDto, userId);
     }

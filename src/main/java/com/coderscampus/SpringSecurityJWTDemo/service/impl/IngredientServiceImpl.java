@@ -11,6 +11,8 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class IngredientServiceImpl implements IngredientService {
@@ -28,7 +30,21 @@ public class IngredientServiceImpl implements IngredientService {
         }
         ingredient.setUser(user);
         user.getIngredients().add(ingredient);
-        return ingredientMapper.entityToDto(ingredientRepo.saveAndFlush(ingredient));
+        return ingredientMapper.entityToDto(ingredientRepo.save(ingredient));
 
     }
+
+    @Override
+    public List<IngredientDto> findAllByUser(Integer userId) {
+        User user = userService.findById(userId);
+        if(user == null) {
+            throw new RuntimeException("User Not Found");
+        }
+        List<Ingredient> ingredients = ingredientRepo.findAllByUser(user);
+        for(Ingredient i : ingredients) {
+            System.out.println(i);
+        }
+        return ingredientMapper.entityListToDtoList(ingredientRepo.findAllByUser(user));
+    }
+
 }
