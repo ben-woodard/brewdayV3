@@ -22,7 +22,7 @@ public class InventoryController {
 //        return "ingredient/home";
 //    }
 
-    @PostMapping("{userId}")
+    @PostMapping("/{userId}")
     public IngredientDto postCreateIngredient(@RequestBody IngredientDto ingredientDto, @PathVariable Integer userId) {
         return ingredientService.saveIngredient(ingredientDto, userId);
     }
