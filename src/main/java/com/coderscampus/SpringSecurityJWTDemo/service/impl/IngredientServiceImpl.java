@@ -46,4 +46,10 @@ public class IngredientServiceImpl implements IngredientService {
         return ingredientMapper.entityListToDtoList(ingredients);
     }
 
+    @Override
+    public IngredientDto updateIngredient(Long ingredientId, IngredientDto ingredientDto) {
+        Ingredient ingredient = ingredientMapper.dtoToEntity(ingredientDto);
+        return ingredientMapper.entityToDto(ingredientRepo.saveAndFlush(ingredient));
+    }
+
 }

@@ -24,6 +24,11 @@ public class InventoryController {
     public IngredientDto postCreateIngredient(@RequestBody IngredientDto ingredientDto, @PathVariable Integer userId) {
         return ingredientService.saveIngredient(ingredientDto, userId);
     }
+
+    @PatchMapping("/{ingredientId}")
+    public IngredientDto updateIngredient(@PathVariable Long ingredientId, @RequestBody IngredientDto ingredientDto) {
+        return ingredientService.updateIngredient(ingredientId, ingredientDto);
+    }
 //
 //    @GetMapping("/{userId}/{ingredientId}")
 //    public String getIngredientInfoById(@PathVariable Long ingredientId, ModelMap model, @PathVariable Integer userId) {

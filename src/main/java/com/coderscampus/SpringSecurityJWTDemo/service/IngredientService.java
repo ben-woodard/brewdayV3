@@ -10,4 +10,6 @@ public interface IngredientService {
     IngredientDto saveIngredient(IngredientDto ingredientDto, Integer userId);
 
     List<IngredientDto> findAllByUser(Integer userId);
+
+    IngredientDto updateIngredient(Long ingredientId, IngredientDto ingredientDto);
 }
