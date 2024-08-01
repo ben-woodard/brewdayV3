@@ -48,7 +48,12 @@ public class IngredientServiceImpl implements IngredientService {
 
     @Override
     public IngredientDto updateIngredient(Long ingredientId, IngredientDto ingredientDto) {
+        Ingredient dbIngredient = ingredientRepo.findById(ingredientId).orElse(null);
+        if(dbIngredient == null) {
+            throw new RuntimeException("Wrong");
+        }
         Ingredient ingredient = ingredientMapper.dtoToEntity(ingredientDto);
+        ingredient.setUser(dbIngredient.getUser());
         return ingredientMapper.entityToDto(ingredientRepo.saveAndFlush(ingredient));
     }
 
