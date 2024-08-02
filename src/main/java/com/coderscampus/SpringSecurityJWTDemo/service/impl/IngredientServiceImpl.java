@@ -7,8 +7,10 @@ import com.coderscampus.SpringSecurityJWTDemo.mappers.IngredientMapper;
 import com.coderscampus.SpringSecurityJWTDemo.repository.IngredientRepository;
 import com.coderscampus.SpringSecurityJWTDemo.service.IngredientService;
 import com.coderscampus.SpringSecurityJWTDemo.service.UserService;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
@@ -55,6 +57,28 @@ public class IngredientServiceImpl implements IngredientService {
         Ingredient ingredient = ingredientMapper.dtoToEntity(ingredientDto);
         ingredient.setUser(dbIngredient.getUser());
         return ingredientMapper.entityToDto(ingredientRepo.saveAndFlush(ingredient));
+    }
+
+    @Override
+    @Transactional
+    public ResponseEntity<String> deleteIngredient(Long ingredientId) {
+        Ingredient ingredient = checkIngredientNull(ingredientId);;
+        ingredient.setUser(null);
+        ingredient.getOrders().removeAll(ingredient.getOrders());
+        ingredient.getRecipes().removeAll(ingredient.getRecipes());
+        if(checkIngredientNull(ingredientId) == null) {
+            return ResponseEntity.ok("Item Successfully Deleted");
+        } else {
+            throw new RuntimeException("There was an error deleting this inventory item");
+        }
+    }
+
+    public Ingredient checkIngredientNull(Long ingredientId) {
+        Ingredient ingredient = ingredientRepo.findById(ingredientId).orElse(null);
+        if(ingredient == null) {
+            throw new RuntimeException("This ingredient was not found in the database");
+        }
+        return ingredient;
     }
 
 }
