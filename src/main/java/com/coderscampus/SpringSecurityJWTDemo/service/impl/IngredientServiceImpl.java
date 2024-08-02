@@ -9,6 +9,7 @@ import com.coderscampus.SpringSecurityJWTDemo.service.IngredientService;
 import com.coderscampus.SpringSecurityJWTDemo.service.UserService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
@@ -62,11 +63,17 @@ public class IngredientServiceImpl implements IngredientService {
     @Override
     @Transactional
     public ResponseEntity<String> deleteIngredient(Long ingredientId) {
-        Ingredient ingredient = checkIngredientNull(ingredientId);;
+        Ingredient ingredient = checkIngredientNull(ingredientId);
+        if (ingredient == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Ingredient not found");
+        }
         ingredient.setUser(null);
-        ingredient.getOrders().removeAll(ingredient.getOrders());
-        ingredient.getRecipes().removeAll(ingredient.getRecipes());
-        if(checkIngredientNull(ingredientId) == null) {
+        ingredient.getOrders().clear();
+        ingredient.getRecipes().clear();
+        ingredientRepo.delete(ingredient);
+
+
+        if (checkIngredientNull(ingredientId) == null) {
             return ResponseEntity.ok("Item Successfully Deleted");
         } else {
             throw new RuntimeException("There was an error deleting this inventory item");
@@ -75,10 +82,10 @@ public class IngredientServiceImpl implements IngredientService {
 
     public Ingredient checkIngredientNull(Long ingredientId) {
         Ingredient ingredient = ingredientRepo.findById(ingredientId).orElse(null);
-        if(ingredient == null) {
-            throw new RuntimeException("This ingredient was not found in the database");
+        if(ingredient != null) {
+           return ingredient;
         }
-        return ingredient;
+        return null;
     }
 
 }
