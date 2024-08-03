@@ -74,7 +74,7 @@ public class IngredientServiceImpl implements IngredientService {
 
 
         if (checkIngredientNull(ingredientId) == null) {
-            return ResponseEntity.ok("Item Successfully Deleted");
+            return ResponseEntity.ok().body("{\"message\": \"Item successfully deleted\"}");
         } else {
             throw new RuntimeException("There was an error deleting this inventory item");
         }
