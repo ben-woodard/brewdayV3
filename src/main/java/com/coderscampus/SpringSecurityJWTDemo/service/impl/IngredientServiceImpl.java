@@ -3,6 +3,8 @@ package com.coderscampus.SpringSecurityJWTDemo.service.impl;
 import com.coderscampus.SpringSecurityJWTDemo.domain.Ingredient;
 import com.coderscampus.SpringSecurityJWTDemo.domain.User;
 import com.coderscampus.SpringSecurityJWTDemo.dto.IngredientDto;
+import com.coderscampus.SpringSecurityJWTDemo.exceptions.BadRequestException;
+import com.coderscampus.SpringSecurityJWTDemo.exceptions.NotFoundException;
 import com.coderscampus.SpringSecurityJWTDemo.mappers.IngredientMapper;
 import com.coderscampus.SpringSecurityJWTDemo.repository.IngredientRepository;
 import com.coderscampus.SpringSecurityJWTDemo.service.IngredientService;
@@ -30,7 +32,7 @@ public class IngredientServiceImpl implements IngredientService {
         Ingredient ingredient = ingredientMapper.dtoToEntity(ingredientDto);
         User user = userService.findById(userId);
         if(user == null) {
-            throw new RuntimeException("User Not Found");
+            throw new NotFoundException("Could not find a user with the provided id to add this ingredient to.");
         }
         ingredient.setUser(user);
         user.getIngredients().add(ingredient);
@@ -42,7 +44,7 @@ public class IngredientServiceImpl implements IngredientService {
     public List<IngredientDto> findAllByUser(Integer userId) {
         User user = userService.findById(userId);
         if(user == null) {
-            throw new RuntimeException("User Not Found");
+            throw new NotFoundException("Could not find a user with the provided id.");
         }
         List<Ingredient> ingredients = ingredientRepo.findAllByUser(user);
         ingredients.sort(Comparator.comparing(Ingredient::getIngredientName));
@@ -53,7 +55,7 @@ public class IngredientServiceImpl implements IngredientService {
     public IngredientDto updateIngredient(Long ingredientId, IngredientDto ingredientDto) {
         Ingredient dbIngredient = ingredientRepo.findById(ingredientId).orElse(null);
         if(dbIngredient == null) {
-            throw new RuntimeException("Wrong");
+            throw new NotFoundException("Could not find an ingredient with the provided id to update");
         }
         Ingredient ingredient = ingredientMapper.dtoToEntity(ingredientDto);
         ingredient.setUser(dbIngredient.getUser());
@@ -65,7 +67,7 @@ public class IngredientServiceImpl implements IngredientService {
     public ResponseEntity<String> deleteIngredient(Long ingredientId) {
         Ingredient ingredient = checkIngredientNull(ingredientId);
         if (ingredient == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Ingredient not found");
+            throw new NotFoundException("Could not find an ingredient with the provided id");
         }
         ingredient.setUser(null);
         ingredient.getOrders().clear();
@@ -76,7 +78,7 @@ public class IngredientServiceImpl implements IngredientService {
         if (checkIngredientNull(ingredientId) == null) {
             return ResponseEntity.ok().body("{\"message\": \"Item successfully deleted\"}");
         } else {
-            throw new RuntimeException("There was an error deleting this inventory item");
+            throw new BadRequestException("Failed to delete the inventory item");
         }
     }
 
