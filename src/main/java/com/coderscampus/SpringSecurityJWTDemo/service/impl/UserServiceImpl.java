@@ -18,6 +18,7 @@ import com.coderscampus.SpringSecurityJWTDemo.repository.UserRepository;
 
 import jakarta.transaction.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -97,6 +98,12 @@ public class UserServiceImpl implements UserService {
     public User findById(Integer userId) {
         return userRepository.findById(userId).orElse(null);
     }
+
+    @Override
+    public void save(User adminUser) {
+        userRepository.save(adminUser);
+    }
+
 
 //    public User loadUserByUsername(String username) {
 //        User user = userRepository.findByEmail(username)

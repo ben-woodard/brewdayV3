@@ -10,4 +10,6 @@ public interface UserService {
     List<User> findAll();
 
     User findById(Integer userId);
+
+    void save(User adminUser);
 }
