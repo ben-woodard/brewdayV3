@@ -3,6 +3,8 @@ package com.coderscampus.SpringSecurityJWTDemo.service.impl;
 import com.coderscampus.SpringSecurityJWTDemo.domain.Authority;
 import com.coderscampus.SpringSecurityJWTDemo.domain.User;
 
+import com.coderscampus.SpringSecurityJWTDemo.dto.UserDto;
+import com.coderscampus.SpringSecurityJWTDemo.mappers.UserMapper;
 import com.coderscampus.SpringSecurityJWTDemo.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,8 +19,8 @@ import org.springframework.stereotype.Service;
 import com.coderscampus.SpringSecurityJWTDemo.repository.UserRepository;
 
 import jakarta.transaction.Transactional;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -28,9 +30,11 @@ public class UserServiceImpl implements UserService {
 	
     private final UserRepository userRepository;
     private Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+    private final UserMapper userMapper;
     
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper) {
         this.userRepository = userRepository;
+        this.userMapper = userMapper;
     }
     
     @Override
@@ -49,11 +53,11 @@ public class UserServiceImpl implements UserService {
             }
         };
     }
-    
 
     @Secured({"ROLE_ADMIN"})
-    public List<User> findAll() {
-        return userRepository.findAll();
+    @CrossOrigin(origins = "http://localhost:4200")
+    public List<UserDto> findAll() {
+        return userMapper.entityListToDto(userRepository.findAll());
     }
 
     @Secured("ROLE_ADMIN")
@@ -82,14 +86,14 @@ public class UserServiceImpl implements UserService {
         }
     }
     
-    public User registerUser(User user) {
-		if (userRepository.findByEmail(user.getEmail()).isPresent()) {
-
-			return null;
-		}
-		return userRepository.save(user);
-	}
-    
+//    public User registerUser(User user) {
+//		if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+//
+//			return null;
+//		}
+//		return userRepository.save(user);
+//	}
+//
     public Optional<User> findUserByEmail(String email) {
     	return userRepository.findByEmail(email);
     }
@@ -102,6 +106,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public void save(User adminUser) {
         userRepository.save(adminUser);
+    }
+
+    @Override
+    public List<UserDto> findAll(User user) {
+        return null;
     }
 
 

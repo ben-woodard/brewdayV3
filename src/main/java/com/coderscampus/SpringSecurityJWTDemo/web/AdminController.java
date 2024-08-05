@@ -2,6 +2,7 @@ package com.coderscampus.SpringSecurityJWTDemo.web;
 
 import com.coderscampus.SpringSecurityJWTDemo.domain.Authority;
 import com.coderscampus.SpringSecurityJWTDemo.domain.User;
+import com.coderscampus.SpringSecurityJWTDemo.dto.UserDto;
 import com.coderscampus.SpringSecurityJWTDemo.service.impl.UserServiceImpl;
 import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
@@ -40,11 +41,10 @@ public class AdminController {
         }
     }
 
-//    @GetMapping("/users")
-//    public ResponseEntity<List<User>> getAllUsers () {
-//        List<User> users = userService.findAll();
-//        return ResponseEntity.ok(users);
-//    }
+    @GetMapping
+    public List<UserDto> getAllUsers () {
+        return userService.findAll();
+    }
 //
 //    @GetMapping("/dashboard")
 //    public String getDashboard (ModelMap model) {
