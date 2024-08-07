@@ -1,5 +1,9 @@
 package com.coderscampus.SpringSecurityJWTDemo.web;
 
+import com.coderscampus.SpringSecurityJWTDemo.dto.response.AuthResponse;
+import com.coderscampus.SpringSecurityJWTDemo.util.CookieUtils;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,13 +34,33 @@ public class AuthenticationController {
     private final AuthenticationManager authenticationManager;
 
     @PostMapping("/signin")
-    public ResponseEntity<Object> signin(@RequestBody SignInRequest request) {
-        Optional<User> existingUser = userService.findUserByEmail(request.email());
-        if(existingUser.isPresent()){
+    public ResponseEntity<Object> signin(@RequestBody SignInRequest request, HttpServletResponse response) {
+        Optional<User> existingUser = userService.findUserByEmail(request.getEmail());
+        if (existingUser.isPresent()) {
             User user = existingUser.get();
-            String accessToken = jwtService.generateToken(user);
-            authenticationService.signin(request);
-            return ResponseEntity.ok(user);
+
+            try {
+                // Authenticate the user
+                authenticationService.signin(request);
+
+                // Generate tokens
+                String accessToken = jwtService.generateToken(user);
+                RefreshToken refreshToken = refreshTokenService.createRefreshToken(user.getId());
+
+                // Set cookies
+                Cookie accessTokenCookie = CookieUtils.createAccessTokenCookie(accessToken);
+                Cookie refreshTokenCookie = CookieUtils.createRefreshTokenCookie(refreshToken.getToken());
+
+                response.addCookie(accessTokenCookie);
+                response.addCookie(refreshTokenCookie);
+
+                // Create response body
+                AuthResponse authResponse = new AuthResponse(user, accessToken, refreshToken.getToken());
+
+                return ResponseEntity.ok(authResponse);
+            } catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password");
+            }
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not found");
         }
