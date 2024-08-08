@@ -1,6 +1,7 @@
 package com.coderscampus.SpringSecurityJWTDemo.dto.response;
 
 import com.coderscampus.SpringSecurityJWTDemo.domain.User;
+import jakarta.servlet.http.Cookie;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -9,6 +10,7 @@ import lombok.Data;
 public class AuthResponse {
 
     private User user;
-    private JwtAuthenticationResponse jwtAuthenticationResponse;
+    private Cookie accessCookie;
+    private Cookie refreshCookie;
 
 }

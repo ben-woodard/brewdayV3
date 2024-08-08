@@ -35,59 +35,16 @@ public class AuthenticationController {
     private final UserServiceImpl userService;
     private final AuthenticationManager authenticationManager;
 
-//    @PostMapping("/signin")
-//    public ResponseEntity<Object> signin(@RequestBody SignInRequest request, HttpServletResponse response) {
-//        Optional<User> existingUser = userService.findUserByEmail(request.getEmail());
-//        if (existingUser.isPresent()) {
-//            User user = existingUser.get();
-//
-//            try {
-//                // Authenticate the user
-//                authenticationService.signin(request);
-//
-//                // Generate tokens
-//                String accessToken = jwtService.generateToken(user);
-//                RefreshToken refreshToken = refreshTokenService.createRefreshToken(user.getId());
-//
-//                // Set cookies
-//                Cookie accessTokenCookie = CookieUtils.createAccessTokenCookie(accessToken);
-//                Cookie refreshTokenCookie = CookieUtils.createRefreshTokenCookie(refreshToken.getToken());
-//
-//                response.addCookie(accessTokenCookie);
-//                response.addCookie(refreshTokenCookie);
-//
-//                // Create response body
-//                AuthResponse authResponse = new AuthResponse(user, accessToken, refreshToken.getToken());
-//
-//                return ResponseEntity.ok(authResponse);
-//            } catch (Exception e) {
-//                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password");
-//            }
-//        } else {
-//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not found");
-//        }
-//    }
-
-//    @PostMapping("/signin")
-//    public ResponseEntity<AuthResponse> signin(@RequestBody SignInRequest request, @RequestBody User user) {
-//        User existingUser = userService.findUserByEmail(user.getEmail()).orElse(null);
-//        if(user == null) {
-//            throw new NotFoundException("There was no user found with this username");
-//        }
-//        String accessToken = jwtService.generateToken(user);
-//        JwtAuthenticationResponse jwtAuthenticationResponse = authenticationService.signin(request);
-//        AuthResponse authResponse = new AuthResponse(existingUser, jwtAuthenticationResponse);
-//        return ResponseEntity.ok(authResponse);
-//    }
 
     @PostMapping("/signin")
     public ResponseEntity<Object> signin(@RequestBody SignInRequest request) {
         Optional<User> existingUser = userService.findUserByEmail(request.getEmail());
         if(existingUser.isPresent()){
             User user = existingUser.get();
-            String accessToken = jwtService.generateToken(user);
             JwtAuthenticationResponse jwtAuthenticationResponse = authenticationService.signin(request);
-            AuthResponse authResponse = new AuthResponse(user, jwtAuthenticationResponse);
+            Cookie accessTokenCookie = CookieUtils.createAccessTokenCookie(jwtAuthenticationResponse.token());
+            Cookie refreshTokenCookie = CookieUtils.createRefreshTokenCookie(jwtAuthenticationResponse.refreshToken());
+            AuthResponse authResponse = new AuthResponse(user, accessTokenCookie, refreshTokenCookie);
             return ResponseEntity.ok(authResponse);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not found");
