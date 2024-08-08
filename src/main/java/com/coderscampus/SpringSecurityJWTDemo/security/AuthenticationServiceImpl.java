@@ -62,13 +62,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public JwtAuthenticationResponse signin(SignInRequest request) {
         authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.email(), request.password()));
-        var user = userRepository.findByEmail(request.email())
+                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+        var user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid email or password"));
         var jwt = jwtService.generateToken(user);
         var refreshTokenOpt = refreshTokenService.findByToken(jwt);
         
-        logger.info("Raw password during login: {}", "Encoded password during login: {}", request.password(), user.getPassword());
+        logger.info("Raw password during login: {}", "Encoded password during login: {}", request.getPassword(), user.getPassword());
         if (refreshTokenOpt.isPresent()) {
             return new JwtAuthenticationResponse(jwt, refreshTokenOpt.get().getToken());
         } else {

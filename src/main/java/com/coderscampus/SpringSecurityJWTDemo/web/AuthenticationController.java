@@ -1,5 +1,11 @@
 package com.coderscampus.SpringSecurityJWTDemo.web;
 
+import com.coderscampus.SpringSecurityJWTDemo.dto.response.AuthResponse;
+import com.coderscampus.SpringSecurityJWTDemo.dto.response.JwtAuthenticationResponse;
+import com.coderscampus.SpringSecurityJWTDemo.exceptions.NotFoundException;
+import com.coderscampus.SpringSecurityJWTDemo.util.CookieUtils;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,14 +35,17 @@ public class AuthenticationController {
     private final UserServiceImpl userService;
     private final AuthenticationManager authenticationManager;
 
+
     @PostMapping("/signin")
     public ResponseEntity<Object> signin(@RequestBody SignInRequest request) {
-        Optional<User> existingUser = userService.findUserByEmail(request.email());
+        Optional<User> existingUser = userService.findUserByEmail(request.getEmail());
         if(existingUser.isPresent()){
             User user = existingUser.get();
-            String accessToken = jwtService.generateToken(user);
-            authenticationService.signin(request);
-            return ResponseEntity.ok(user);
+            JwtAuthenticationResponse jwtAuthenticationResponse = authenticationService.signin(request);
+            Cookie accessTokenCookie = CookieUtils.createAccessTokenCookie(jwtAuthenticationResponse.token());
+            Cookie refreshTokenCookie = CookieUtils.createRefreshTokenCookie(jwtAuthenticationResponse.refreshToken());
+            AuthResponse authResponse = new AuthResponse(user, accessTokenCookie, refreshTokenCookie);
+            return ResponseEntity.ok(authResponse);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not found");
         }
