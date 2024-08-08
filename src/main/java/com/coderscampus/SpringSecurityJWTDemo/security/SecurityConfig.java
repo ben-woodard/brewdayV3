@@ -31,6 +31,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -69,7 +70,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(request -> request
                                 		.requestMatchers("/api/v1/auth/**").permitAll()
                                         .requestMatchers("/admin/**").hasRole(Role.ADMIN.name())
-                                        .requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()
+                                        .requestMatchers("/register").permitAll()
                                         .requestMatchers("/products").authenticated()
                                         .requestMatchers("/success").authenticated()
                                         .requestMatchers("/register").permitAll()

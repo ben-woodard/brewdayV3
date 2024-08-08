@@ -9,7 +9,6 @@ import lombok.Data;
 public class AuthResponse {
 
     private User user;
-    private String accessToken;
-    private String refreshToken;
+    private JwtAuthenticationResponse jwtAuthenticationResponse;
 
 }

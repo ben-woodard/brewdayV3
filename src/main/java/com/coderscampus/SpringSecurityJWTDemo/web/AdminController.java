@@ -8,12 +8,11 @@ import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+
 
 @RestController
 @RequestMapping("/admin")
@@ -58,8 +57,8 @@ public class AdminController {
 //        Optional<User> findUser = userService.findUserById(userId);
 //
 //        userService.elevateUserToAdmin(userId);
-//        logger.info("Processing elevation for user: {}", findUser.get().getEmail());
-//        logger.info("Role: {}", findUser.get().getAuthorities());
+////        logger.info("Processing elevation for user: {}", findUser.get().getEmail());
+////        logger.info("Role: {}", findUser.get().getAuthorities());
 //        return ResponseEntity.ok("User elevated to admin");
 //    }
 }

@@ -1,6 +1,8 @@
 package com.coderscampus.SpringSecurityJWTDemo.web;
 
 import com.coderscampus.SpringSecurityJWTDemo.dto.response.AuthResponse;
+import com.coderscampus.SpringSecurityJWTDemo.dto.response.JwtAuthenticationResponse;
+import com.coderscampus.SpringSecurityJWTDemo.exceptions.NotFoundException;
 import com.coderscampus.SpringSecurityJWTDemo.util.CookieUtils;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -33,38 +35,61 @@ public class AuthenticationController {
     private final UserServiceImpl userService;
     private final AuthenticationManager authenticationManager;
 
+//    @PostMapping("/signin")
+//    public ResponseEntity<Object> signin(@RequestBody SignInRequest request, HttpServletResponse response) {
+//        Optional<User> existingUser = userService.findUserByEmail(request.getEmail());
+//        if (existingUser.isPresent()) {
+//            User user = existingUser.get();
+//
+//            try {
+//                // Authenticate the user
+//                authenticationService.signin(request);
+//
+//                // Generate tokens
+//                String accessToken = jwtService.generateToken(user);
+//                RefreshToken refreshToken = refreshTokenService.createRefreshToken(user.getId());
+//
+//                // Set cookies
+//                Cookie accessTokenCookie = CookieUtils.createAccessTokenCookie(accessToken);
+//                Cookie refreshTokenCookie = CookieUtils.createRefreshTokenCookie(refreshToken.getToken());
+//
+//                response.addCookie(accessTokenCookie);
+//                response.addCookie(refreshTokenCookie);
+//
+//                // Create response body
+//                AuthResponse authResponse = new AuthResponse(user, accessToken, refreshToken.getToken());
+//
+//                return ResponseEntity.ok(authResponse);
+//            } catch (Exception e) {
+//                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password");
+//            }
+//        } else {
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not found");
+//        }
+//    }
+
     @PostMapping("/signin")
-    public ResponseEntity<Object> signin(@RequestBody SignInRequest request, HttpServletResponse response) {
-        Optional<User> existingUser = userService.findUserByEmail(request.getEmail());
-        if (existingUser.isPresent()) {
-            User user = existingUser.get();
-
-            try {
-                // Authenticate the user
-                authenticationService.signin(request);
-
-                // Generate tokens
-                String accessToken = jwtService.generateToken(user);
-                RefreshToken refreshToken = refreshTokenService.createRefreshToken(user.getId());
-
-                // Set cookies
-                Cookie accessTokenCookie = CookieUtils.createAccessTokenCookie(accessToken);
-                Cookie refreshTokenCookie = CookieUtils.createRefreshTokenCookie(refreshToken.getToken());
-
-                response.addCookie(accessTokenCookie);
-                response.addCookie(refreshTokenCookie);
-
-                // Create response body
-                AuthResponse authResponse = new AuthResponse(user, accessToken, refreshToken.getToken());
-
-                return ResponseEntity.ok(authResponse);
-            } catch (Exception e) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password");
-            }
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not found");
+    public ResponseEntity<AuthResponse> signin(@RequestBody SignInRequest request, @RequestBody User user) {
+        User existingUser = userService.findUserByEmail(user.getEmail()).orElse(null);
+        if(user == null) {
+            throw new NotFoundException("There was no user found with this username");
         }
+        String accessToken = jwtService.generateToken(user);
+        JwtAuthenticationResponse jwtAuthenticationResponse = authenticationService.signin(request);
+        AuthResponse authResponse = new AuthResponse(existingUser, jwtAuthenticationResponse);
+        return ResponseEntity.ok(authResponse);
     }
+
+
+
+
+//      @PostMapping("/signin") public String authenticateLogin( @RequestBody SignInRequest request) {
+//      Optional<User> existingUser = userService.findUserByEmail(request.getEmail());
+//      User loggedUser = userService.loadUserByUsername(user.getUsername());
+//      String accessToken = jwtService.generateToken(user);
+//
+//      return ResponseEntity.ok(authenticationService.signin(request)); }
+
 
     @PostMapping("/refreshtoken")
     public ResponseEntity<?> refreshtoken(@RequestBody RefreshTokenRequest request) {
