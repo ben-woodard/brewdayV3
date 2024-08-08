@@ -81,7 +81,7 @@ public class SecurityConfig {
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .formLogin(login -> {login
-		        	.loginPage("/api/v1/auth/signin")
+		        	.loginPage("http://localhost4200")
 //		        	.failureUrl("/failure"); // this can be linked to a failure message on the failure template
 		        	.usernameParameter("email")
 		        	.successHandler((request, response, authentication) -> {

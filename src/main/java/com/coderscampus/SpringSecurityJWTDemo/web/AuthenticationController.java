@@ -68,28 +68,31 @@ public class AuthenticationController {
 //        }
 //    }
 
+//    @PostMapping("/signin")
+//    public ResponseEntity<AuthResponse> signin(@RequestBody SignInRequest request, @RequestBody User user) {
+//        User existingUser = userService.findUserByEmail(user.getEmail()).orElse(null);
+//        if(user == null) {
+//            throw new NotFoundException("There was no user found with this username");
+//        }
+//        String accessToken = jwtService.generateToken(user);
+//        JwtAuthenticationResponse jwtAuthenticationResponse = authenticationService.signin(request);
+//        AuthResponse authResponse = new AuthResponse(existingUser, jwtAuthenticationResponse);
+//        return ResponseEntity.ok(authResponse);
+//    }
+
     @PostMapping("/signin")
-    public ResponseEntity<AuthResponse> signin(@RequestBody SignInRequest request, @RequestBody User user) {
-        User existingUser = userService.findUserByEmail(user.getEmail()).orElse(null);
-        if(user == null) {
-            throw new NotFoundException("There was no user found with this username");
+    public ResponseEntity<Object> signin(@RequestBody SignInRequest request) {
+        Optional<User> existingUser = userService.findUserByEmail(request.getEmail());
+        if(existingUser.isPresent()){
+            User user = existingUser.get();
+            String accessToken = jwtService.generateToken(user);
+            JwtAuthenticationResponse jwtAuthenticationResponse = authenticationService.signin(request);
+            AuthResponse authResponse = new AuthResponse(user, jwtAuthenticationResponse);
+            return ResponseEntity.ok(authResponse);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not found");
         }
-        String accessToken = jwtService.generateToken(user);
-        JwtAuthenticationResponse jwtAuthenticationResponse = authenticationService.signin(request);
-        AuthResponse authResponse = new AuthResponse(existingUser, jwtAuthenticationResponse);
-        return ResponseEntity.ok(authResponse);
     }
-
-
-
-
-//      @PostMapping("/signin") public String authenticateLogin( @RequestBody SignInRequest request) {
-//      Optional<User> existingUser = userService.findUserByEmail(request.getEmail());
-//      User loggedUser = userService.loadUserByUsername(user.getUsername());
-//      String accessToken = jwtService.generateToken(user);
-//
-//      return ResponseEntity.ok(authenticationService.signin(request)); }
-
 
     @PostMapping("/refreshtoken")
     public ResponseEntity<?> refreshtoken(@RequestBody RefreshTokenRequest request) {
