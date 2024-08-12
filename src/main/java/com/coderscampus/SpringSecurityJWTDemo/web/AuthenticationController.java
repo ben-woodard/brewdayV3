@@ -7,6 +7,7 @@ import com.coderscampus.SpringSecurityJWTDemo.util.CookieUtils;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -37,7 +38,7 @@ public class AuthenticationController {
 
 
     @PostMapping("/signin")
-    public ResponseEntity<Object> signin(@RequestBody SignInRequest request) {
+    public ResponseEntity<Object> signin(@RequestBody SignInRequest request, HttpServletResponse response) {
         Optional<User> existingUser = userService.findUserByEmail(request.getEmail());
         if(existingUser.isPresent()){
             User user = existingUser.get();
