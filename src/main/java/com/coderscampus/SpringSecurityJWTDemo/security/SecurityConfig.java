@@ -72,8 +72,6 @@ public class SecurityConfig {
                                         .requestMatchers("/admin/**").hasRole(Role.ADMIN.name())
                                         .requestMatchers("/register").permitAll()
                                         .requestMatchers("/products").authenticated()
-                                        .requestMatchers("/success").authenticated()
-                                        .requestMatchers("/register").permitAll()
                                         .anyRequest().authenticated()
                         )
                 .headers(header -> header.frameOptions(frameOption -> frameOption.disable()))
