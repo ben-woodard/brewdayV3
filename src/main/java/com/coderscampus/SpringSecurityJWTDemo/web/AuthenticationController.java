@@ -45,12 +45,25 @@ public class AuthenticationController {
             JwtAuthenticationResponse jwtAuthenticationResponse = authenticationService.signin(request);
             Cookie accessTokenCookie = CookieUtils.createAccessTokenCookie(jwtAuthenticationResponse.token());
             Cookie refreshTokenCookie = CookieUtils.createRefreshTokenCookie(jwtAuthenticationResponse.refreshToken());
-            AuthResponse authResponse = new AuthResponse(user, accessTokenCookie, refreshTokenCookie);
+            String accessToken = jwtService.generateToken(user);
+            AuthResponse authResponse = new AuthResponse(user, accessTokenCookie, refreshTokenCookie, accessToken);
             return ResponseEntity.ok(authResponse);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not found");
         }
     }
+
+    /*
+     * This code is from Trevor's original implementation which might be helpful for those who are not using server rendering templates
+     *
+     * @PostMapping("/signin") public String authenticateLogin
+     * (@ModelAttribute("user") User user, SignInRequest request) {
+     * Optional<User> existingUser = userService.findUserByEmail(user.getEmail());
+     * User loggedUser = ((User) userService).loadUserByUsername(user.getUsername());
+     * String accessToken = jwtService.generateToken(user);
+     *
+     * return ResponseEntity.ok(authenticationService.signin(request)); }
+     */
 
     @PostMapping("/refreshtoken")
     public ResponseEntity<?> refreshtoken(@RequestBody RefreshTokenRequest request) {

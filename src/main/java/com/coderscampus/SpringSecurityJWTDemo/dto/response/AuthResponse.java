@@ -12,5 +12,6 @@ public class AuthResponse {
     private User user;
     private Cookie accessCookie;
     private Cookie refreshCookie;
+    private String jwtToken;
 
 }
