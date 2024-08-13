@@ -1,47 +1,30 @@
 package com.coderscampus.SpringSecurityJWTDemo.security;
 
-import com.coderscampus.SpringSecurityJWTDemo.domain.RefreshToken;
 import com.coderscampus.SpringSecurityJWTDemo.domain.Role;
-import com.coderscampus.SpringSecurityJWTDemo.domain.User;
-import com.coderscampus.SpringSecurityJWTDemo.service.RefreshTokenService;
 import com.coderscampus.SpringSecurityJWTDemo.service.impl.UserServiceImpl;
-import com.coderscampus.SpringSecurityJWTDemo.util.CookieUtils;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpServletResponseWrapper;
-
-import java.io.IOException;
-import java.util.HashMap;
-
+import java.util.Arrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.ObjectPostProcessor;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 
 @Configuration
@@ -50,94 +33,48 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final UserServiceImpl userService;
-    private final JwtServiceImpl jwtService;
-    private final RefreshTokenService refreshTokenService;
-    private Logger logger = LoggerFactory.getLogger(SecurityConfig.class);
+    private final Logger logger = LoggerFactory.getLogger(SecurityConfig.class);
     
-    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter, UserServiceImpl userService,
-			JwtServiceImpl jwtService, RefreshTokenService refreshTokenService) {
+    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter, UserServiceImpl userService) {
 		super();
 		this.jwtAuthenticationFilter = jwtAuthenticationFilter;
 		this.userService = userService;
-		this.jwtService = jwtService;
-		this.refreshTokenService = refreshTokenService;
-	}
+    }
 
 	@Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
-//        .authorizeHttpRequests(request -> request.requestMatchers("**").permitAll().anyRequest().authenticated())
                 .authorizeHttpRequests(request -> request
-                                		.requestMatchers("/api/v1/auth/**").permitAll()
-                                        .requestMatchers("/admin/**").hasRole(Role.ADMIN.name())
-                                        .requestMatchers("/register").permitAll()
-                                        .requestMatchers("/products").authenticated()
-                                        .anyRequest().authenticated()
-                        )
-                .headers(header -> header.frameOptions(frameOption -> frameOption.disable()))
-//                .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                        .requestMatchers("/api/v1/auth/**").permitAll()
+                        .requestMatchers("/admin/**").hasRole(Role.ADMIN.name())
+                        .requestMatchers("/products").authenticated()
+                        .requestMatchers("/turns").authenticated()
+                        .requestMatchers("/home/**").authenticated()
+                        .requestMatchers("/products/**").authenticated()
+                        .requestMatchers("/recipes/**").authenticated()
+                        .requestMatchers("/inventory/**").authenticated()
+                        .requestMatchers("/batches/**").authenticated()
+                        .requestMatchers("/register").permitAll()
+                        .anyRequest().permitAll()
+                )
+                .headers(header -> header.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
+                .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .formLogin(login -> {login
-		        	.loginPage("http://localhost4200")
-//		        	.failureUrl("/failure"); // this can be linked to a failure message on the failure template
-		        	.usernameParameter("email")
-		        	.successHandler((request, response, authentication) -> {
-
-                        //HttpServletResponseWrapper ensures that the cookie is set only when the authentication is successful
-                        response = new HttpServletResponseWrapper(response);
-                        User user = (User) authentication.getPrincipal();
-                        String accessToken = jwtService.generateToken(new HashMap<>(), user);
-                        RefreshToken refreshToken = refreshTokenService.createRefreshToken(user.getId());
-
-                        Cookie accessTokenCookie = CookieUtils.createAccessTokenCookie(accessToken);
-                        Cookie refreshTokenCookie = CookieUtils.createRefreshTokenCookie(refreshToken.getToken());
-
-                        logger.info("Successful authentication for: " + user.getUsername());
-                        logger.info("Access Cookie: " + accessTokenCookie.getValue());
-                        logger.info("Refresh Cookie: " + refreshTokenCookie.getValue());
-                        logger.info("Role for " + user.getUsername() + " is: " + user.authority(accessToken).toString());
-                        logger.info("Successful authentication for: " + user.getUsername());
-                        logger.info("Access Cookie: " + accessTokenCookie.getValue());
-                        logger.info("Refresh Cookie: " + refreshTokenCookie.getValue());
-                        logger.info("Role for " + user.getUsername() + " is: " + user.authority(accessToken).toString());
-//
-                        response.addCookie(accessTokenCookie);
-                        response.addCookie(refreshTokenCookie);
-                        response.sendRedirect("http://localhost:4200/home");
-                        System.out.println("Hello World");
-
-                    })
-		        	.failureHandler(new AuthenticationFailureHandler() {
-						
-						@Override
-						public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
-								AuthenticationException exception) throws IOException, ServletException {
-
-							String email = request.getParameter("email");
-							String password = request.getParameter("password");
-							
-							logger.error("Authentication failed for email: " + email);
-							logger.error("Authentication failed: " + exception.getMessage(), exception);
-							logger.info("Raw password during login: " + password);
-					        logger.info("Encoded password during login: " + passwordEncoder().encode(password));
-							
-							response.sendRedirect("/error");
-						}
-					})
-		        	.permitAll();
-		        })
-                .logout(logoutConfigurer -> {logoutConfigurer
-                	.logoutUrl("/logout")
-                	.logoutSuccessUrl("http://localhost:4200")
-                	// delete cookies from client after logout
-                	.deleteCookies("accessToken") 
-                	.deleteCookies("refreshToken")
-                	.deleteCookies("JSESSIONID")
-                	.invalidateHttpSession(true)
-                	.clearAuthentication(true);
-                });
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()));
         return http.build();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH"));
+        configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setAllowCredentials(true);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 
     @Bean
