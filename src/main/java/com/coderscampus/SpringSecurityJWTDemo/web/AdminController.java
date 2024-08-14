@@ -1,8 +1,10 @@
 package com.coderscampus.SpringSecurityJWTDemo.web;
 
 import com.coderscampus.SpringSecurityJWTDemo.domain.Authority;
+import com.coderscampus.SpringSecurityJWTDemo.domain.Company;
 import com.coderscampus.SpringSecurityJWTDemo.domain.User;
 import com.coderscampus.SpringSecurityJWTDemo.dto.UserDto;
+import com.coderscampus.SpringSecurityJWTDemo.service.CompanyService;
 import com.coderscampus.SpringSecurityJWTDemo.service.impl.UserServiceImpl;
 import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
@@ -21,10 +23,12 @@ public class AdminController {
 
     private UserServiceImpl userService;
     private PasswordEncoder passwordEncoder;
+    private CompanyService companyService;
 
     @PostConstruct
     public void init() {
         createAdminUser();
+        createCompany1();
     }
 
     public void createAdminUser() {
@@ -38,6 +42,14 @@ public class AdminController {
             adminUser.setAuthorities(Collections.singletonList(adminAuth));
             userService.save(adminUser);
             System.out.println(adminUser);
+        }
+    }
+
+    public void createCompany1() {
+        if(companyService.findByCompanyName("Company1") == null){
+            Company company = new Company();
+            company.setCompanyName("Company1");
+            companyService.save(company);
         }
     }
 
