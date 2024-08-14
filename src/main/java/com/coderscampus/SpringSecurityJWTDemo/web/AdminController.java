@@ -44,21 +44,10 @@ public class AdminController {
     public List<UserDto> getAllUsers () {
         return userService.findAll();
     }
-//
-//    @GetMapping("/dashboard")
-//    public String getDashboard (ModelMap model) {
-//        List<User> users = userService.findAll();
-//        model.addAttribute("userList", users);
-//        return "admin/dashboard";
-//    }
-//
-//    @PostMapping("/makeAdmin")
-//    public ResponseEntity<String> elevateToAdmin (@RequestParam Integer userId) {
-//        Optional<User> findUser = userService.findUserById(userId);
-//
-//        userService.elevateUserToAdmin(userId);
-////        logger.info("Processing elevation for user: {}", findUser.get().getEmail());
-////        logger.info("Role: {}", findUser.get().getAuthorities());
-//        return ResponseEntity.ok("User elevated to admin");
-//    }
+
+    @PostMapping("/makeAdmin/{userId}")
+    public UserDto elevateToAdmin (@PathVariable Integer userId) {
+        return userService.elevateUserToAdmin(userId);
+
+    }
 }
