@@ -4,10 +4,12 @@ import com.coderscampus.SpringSecurityJWTDemo.domain.Authority;
 import com.coderscampus.SpringSecurityJWTDemo.domain.User;
 
 import com.coderscampus.SpringSecurityJWTDemo.dto.UserDto;
+import com.coderscampus.SpringSecurityJWTDemo.exceptions.BadRequestException;
 import com.coderscampus.SpringSecurityJWTDemo.mappers.UserMapper;
 import com.coderscampus.SpringSecurityJWTDemo.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -27,29 +29,29 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
-	
+
     private final UserRepository userRepository;
     private Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
     private final UserMapper userMapper;
-    
+
     public UserServiceImpl(UserRepository userRepository, UserMapper userMapper) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
     }
-    
+
     @Override
     public UserDetailsService userDetailsService() {
         return new UserDetailsService() {
             @Override
             public UserDetails loadUserByUsername(String username) {
-            	User user = userRepository.findByEmail(username)
-            			.orElseThrow(() -> new UsernameNotFoundException("User not found" + username));
+                User user = userRepository.findByEmail(username)
+                        .orElseThrow(() -> new UsernameNotFoundException("User not found" + username));
 
-            	List<GrantedAuthority> grantedAuthorities = user.getAuthorities().stream()
-            			.map(auth -> new SimpleGrantedAuthority(auth.getAuthority()))
-            			.collect(Collectors.toList());
+                List<GrantedAuthority> grantedAuthorities = user.getAuthorities().stream()
+                        .map(auth -> new SimpleGrantedAuthority(auth.getAuthority()))
+                        .collect(Collectors.toList());
 
-            	return user;
+                return user;
             }
         };
     }
@@ -62,40 +64,24 @@ public class UserServiceImpl implements UserService {
 
     @Secured("ROLE_ADMIN")
     @Transactional // This annotation ensures that changes are committed to the database
-    public void elevateUserToAdmin(Integer userId) {
+    public UserDto elevateUserToAdmin(Integer userId) {
         Optional<User> optionalUser = userRepository.findById(userId);
 
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
-
-            // Check if the user doesn't already have the admin role
             if (user.getAuthorities().stream().noneMatch(auth -> "ROLE_ADMIN".equals(auth.getAuthority()))) {
-                // Add the admin role to the user
                 Authority adminAuthority = new Authority("ROLE_ADMIN");
                 adminAuthority.setUser(user);
                 user.getAuthorities().add(adminAuthority);
-
-                logger.info("Setting Auth for user: " + user.getId() + user.getEmail());
-                logger.info("Setting Authorities: " + user.getAuthorities());
-                
-                // Save the updated user
-                userRepository.save(user);
+                return userMapper.entityToDto(userRepository.save(user));
             }
-        } else {
-            throw new IllegalArgumentException("User not found with ID: " + userId);
         }
+        throw new BadRequestException("There was An Error elevating the user to Admin");
     }
-    
-//    public User registerUser(User user) {
-//		if (userRepository.findByEmail(user.getEmail()).isPresent()) {
-//
-//			return null;
-//		}
-//		return userRepository.save(user);
-//	}
-//
+
+
     public Optional<User> findUserByEmail(String email) {
-    	return userRepository.findByEmail(email);
+        return userRepository.findByEmail(email);
     }
 
     @Override
@@ -111,6 +97,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserDto> findAll(User user) {
         return null;
+    }
+
+    @Override
+    public User findUserById(Integer userId) {
+        return userRepository.findById(userId).orElse(null);
     }
 
 

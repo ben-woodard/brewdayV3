@@ -2,17 +2,14 @@ package com.coderscampus.SpringSecurityJWTDemo.web;
 
 import com.coderscampus.SpringSecurityJWTDemo.dto.response.AuthResponse;
 import com.coderscampus.SpringSecurityJWTDemo.dto.response.JwtAuthenticationResponse;
-import com.coderscampus.SpringSecurityJWTDemo.exceptions.NotFoundException;
 import com.coderscampus.SpringSecurityJWTDemo.util.CookieUtils;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
-
 import com.coderscampus.SpringSecurityJWTDemo.dto.request.RefreshTokenRequest;
 import com.coderscampus.SpringSecurityJWTDemo.dto.request.SignInRequest;
 import com.coderscampus.SpringSecurityJWTDemo.dto.response.TokenRefreshResponse;
@@ -22,7 +19,6 @@ import com.coderscampus.SpringSecurityJWTDemo.security.AuthenticationServiceImpl
 import com.coderscampus.SpringSecurityJWTDemo.security.JwtService;
 import com.coderscampus.SpringSecurityJWTDemo.service.RefreshTokenService;
 import com.coderscampus.SpringSecurityJWTDemo.service.impl.UserServiceImpl;
-
 import java.util.Optional;
 
 @RestController
@@ -52,18 +48,6 @@ public class AuthenticationController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not found");
         }
     }
-
-    /*
-     * This code is from Trevor's original implementation which might be helpful for those who are not using server rendering templates
-     *
-     * @PostMapping("/signin") public String authenticateLogin
-     * (@ModelAttribute("user") User user, SignInRequest request) {
-     * Optional<User> existingUser = userService.findUserByEmail(user.getEmail());
-     * User loggedUser = ((User) userService).loadUserByUsername(user.getUsername());
-     * String accessToken = jwtService.generateToken(user);
-     *
-     * return ResponseEntity.ok(authenticationService.signin(request)); }
-     */
 
     @PostMapping("/refreshtoken")
     public ResponseEntity<?> refreshtoken(@RequestBody RefreshTokenRequest request) {
