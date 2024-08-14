@@ -6,7 +6,7 @@ import org.mapstruct.Mapper;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring", uses = {ProductMapper.class, OrderMapper.class})
+@Mapper(componentModel = "spring", uses = {CompanyMapper.class})
 public interface UserMapper {
 
     UserDto entityToDto (User user);
