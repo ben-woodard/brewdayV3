@@ -48,6 +48,5 @@ public class AdminController {
     @PostMapping("/makeAdmin/{userId}")
     public UserDto elevateToAdmin (@PathVariable Integer userId) {
         return userService.elevateUserToAdmin(userId);
-
     }
 }
