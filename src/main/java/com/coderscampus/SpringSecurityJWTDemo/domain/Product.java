@@ -22,8 +22,8 @@ public class Product {
 	private String productName;
 	private Long defaultRecipeId;
 	@ManyToOne
-	@JoinColumn(name = "user_id")
-	private User user;
+	@JoinColumn(name = "company_id")
+	private Company company;
 	@OneToMany(mappedBy = "product", cascade = {CascadeType.MERGE}, orphanRemoval = true)
 	@JsonIgnoreProperties("product")
 	private List<Recipe> recipes = new ArrayList<>();
@@ -41,7 +41,7 @@ public class Product {
 		return "Product{" +
 				"productId=" + productId +
 				", productName='" + productName + '\'' +
-				", user=" + user +
+				", company=" + company +
 				'}';
 	}
 }

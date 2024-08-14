@@ -3,7 +3,6 @@ package com.coderscampus.SpringSecurityJWTDemo.domain;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,8 +32,8 @@ public class Order {
     @Column(name = "amount_to_add")
     private Map<Long, Double> ingredientsToAdd = new HashMap<>();
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "company_id")
+    private Company company;
 
     @Override
     public String toString() {

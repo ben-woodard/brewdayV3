@@ -28,8 +28,8 @@ public class Ingredient {
     @Column(name = "unitOfMeasurement")
     private unitOfMeasurement unitOfMeasurement;
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "company_id")
+    private Company company;
 
     public enum ingredientType {
         MALT,

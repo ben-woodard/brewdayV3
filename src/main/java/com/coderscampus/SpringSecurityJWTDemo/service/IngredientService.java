@@ -3,8 +3,10 @@ package com.coderscampus.SpringSecurityJWTDemo.service;
 import com.coderscampus.SpringSecurityJWTDemo.domain.Ingredient;
 import com.coderscampus.SpringSecurityJWTDemo.dto.IngredientDto;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
+
 
 public interface IngredientService {
 

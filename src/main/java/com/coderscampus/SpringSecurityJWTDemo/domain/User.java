@@ -29,27 +29,21 @@ public class User implements UserDetails {
     @Setter
     @Getter
     private String lastName;
-    @Getter
-    @Setter
-    private String companyName;
     @Setter
     @Getter
     private String email;
     @Setter
     private String password;
+    @ManyToOne
+    @JoinColumn(name = "company_id")
+    private Company company;
+    @ManyToOne
+    @JoinColumn(name = "requestCompany_id")
+    private Company requestedCompany;
     @Setter
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JsonIgnoreProperties("user")
     private List<Authority> authorities = new ArrayList<>();
-    @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JsonIgnoreProperties("user")
-    private List<Product> products = new ArrayList<>();
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JsonIgnoreProperties("user")
-    private List<Order> orders = new ArrayList<>();
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
-    @JsonIgnoreProperties("user")
-    private List<Ingredient> ingredients = new ArrayList<>();
 
     @Override
     public Collection<Authority> getAuthorities() {
