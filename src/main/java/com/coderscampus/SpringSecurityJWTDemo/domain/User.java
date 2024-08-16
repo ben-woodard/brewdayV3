@@ -110,4 +110,17 @@ public class User implements UserDetails {
         return this;
     }
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", company=" + (company != null ? company.getCompanyName() : "null") +  // Avoid full Company object to prevent circular reference
+                ", requestedCompany=" + (requestedCompany != null ? requestedCompany.getCompanyName() : "null") +  // Avoid full Company object to prevent circular reference
+                ", authorities=" + authorities.stream().map(Authority::getAuthority).toList() +  // Include authority names only
+                '}';
+    }
+
 }

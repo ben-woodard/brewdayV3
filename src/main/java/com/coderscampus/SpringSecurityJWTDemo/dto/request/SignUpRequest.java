@@ -6,7 +6,7 @@ public record SignUpRequest(String email,
                             String password,
                             String firstName,
                             String lastName,
-                            String companyName,
+                            Long companyId,
                             Optional<String> authorityOpt) {
 
 }

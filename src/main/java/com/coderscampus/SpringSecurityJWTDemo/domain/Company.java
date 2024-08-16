@@ -40,4 +40,14 @@ public class Company {
     @OneToMany(mappedBy = "company", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JsonIgnoreProperties("user")
     private List<User> requestedUsers = new ArrayList<>();
+
+    @Override
+    public String toString() {
+        return "Company{" +
+                "companyId=" + companyId +
+                ", companyName='" + companyName + '\'' +
+                ", users=" + users.stream().map(User::getUsername).toList() +  // Include user emails only
+                ", products=" + products.stream().map(Product::getProductName).toList() +  // Include product names only
+                '}';
+    }
 }

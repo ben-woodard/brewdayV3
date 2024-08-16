@@ -3,6 +3,9 @@ package com.coderscampus.SpringSecurityJWTDemo.security;
 
 import com.coderscampus.SpringSecurityJWTDemo.domain.Authority;
 
+import com.coderscampus.SpringSecurityJWTDemo.domain.Company;
+import com.coderscampus.SpringSecurityJWTDemo.exceptions.NotFoundException;
+import com.coderscampus.SpringSecurityJWTDemo.service.CompanyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -28,15 +31,17 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final RefreshTokenService refreshTokenService;
+    private final CompanyService companyService;
     
     public AuthenticationServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder,
-            JwtService jwtService, AuthenticationManager authenticationManager, RefreshTokenService refreshTokenService) {
+                                     JwtService jwtService, AuthenticationManager authenticationManager, RefreshTokenService refreshTokenService, CompanyService companyService) {
         super();
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
         this.refreshTokenService = refreshTokenService;
+        this.companyService = companyService;
     }
 
 	@Override
@@ -47,9 +52,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .email(request.email())
                 .password(passwordEncoder.encode(request.password()))
                 .authority(Role.USER.name()).build();
-//        user.setCompanyName(request.companyName());
         request.authorityOpt().ifPresent(auth -> user.getAuthorities().add(new Authority(auth, user)));
-        userRepository.save(user);
+        userRepository.saveAndFlush(user);
+        addRequestedCompany(user, request.companyId());
         var jwt = jwtService.generateToken(user);
         var refreshToken = refreshTokenService.createRefreshToken(user.getId());
         
@@ -74,6 +79,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         } else {
             return new JwtAuthenticationResponse(jwt, refreshTokenService.createRefreshToken(user.getId()).getToken());
         }
+    }
+
+    private void addRequestedCompany(User user, Long companyId) {
+        Company company = companyService.findById(companyId);
+        if(company == null) {
+            throw new NotFoundException("There was no Existing Company Found with this Id");
+        }
+        company.getRequestedUsers().add(user);
+        user.setRequestedCompany(company);
     }
 }
 

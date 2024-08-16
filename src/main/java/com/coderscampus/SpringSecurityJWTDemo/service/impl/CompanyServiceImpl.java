@@ -20,4 +20,10 @@ public class CompanyServiceImpl implements com.coderscampus.SpringSecurityJWTDem
     public void save(Company company) {
         companyRepository.save(company);
     }
+
+    @Override
+    public Company findById(Long companyId) {
+        return companyRepository.findById(companyId).orElse(null);
+
+    }
 }

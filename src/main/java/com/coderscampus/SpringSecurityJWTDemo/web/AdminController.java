@@ -41,7 +41,6 @@ public class AdminController {
             Authority adminAuth = new Authority("SUPER", adminUser);
             adminUser.setAuthorities(Collections.singletonList(adminAuth));
             userService.save(adminUser);
-            System.out.println(adminUser);
         }
     }
 
