@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -28,39 +29,60 @@ public class AdminController {
     @PostConstruct
     public void init() {
         createAdminUser();
-        createCompany1();
+//        createCompany1();
+//        createSuperUser();
     }
 
     public void createAdminUser() {
-        if(userService.findUserByEmail("admin@email.com").isEmpty()) {
+        if (userService.findUserByEmail("admin@email.com").isEmpty() && companyService.findByCompanyName("Company1") == null) {
+
             User adminUser = new User();
             adminUser.setFirstName("Admin");
             adminUser.setLastName("User");
             adminUser.setEmail("admin@email.com");
-            adminUser.setPassword(passwordEncoder.encode("adminPassword"));
-            Authority adminAuth = new Authority("ADMIN", adminUser);
-            Authority superAuth = new Authority("SUPER", adminUser);
-            adminUser.setAuthorities(Collections.singletonList(adminAuth));
-            adminUser.setAuthorities(Collections.singletonList(superAuth));
-            userService.save(adminUser);
-        }
-    }
 
-    public void createCompany1() {
-        if(companyService.findByCompanyName("Company1") == null){
+            adminUser.setPassword(passwordEncoder.encode("password"));
+            Authority adminAuth = new Authority("ROLE_ADMIN", adminUser);
+            adminUser.setAuthorities(Collections.singletonList(adminAuth));
+            userService.save(adminUser);
+
             Company company = new Company();
             company.setCompanyName("Company1");
             companyService.save(company);
+
+            adminUser.setCompany(company);
+            company.getUsers().add(adminUser);
         }
     }
 
+//    public void createSuperUser() {
+//        if(userService.findUserByEmail("admin@email.com").isEmpty()) {
+//            User superUser = new User();
+//            superUser.setFirstName("SUPER");
+//            superUser.setLastName("User");
+//            superUser.setEmail("super@email.com");
+//            superUser.setPassword(passwordEncoder.encode("super"));
+//            Authority superAuth = new Authority("SUPER", superUser);
+//            superUser.setAuthorities(Collections.singletonList(superAuth));
+//            userService.save(superUser);
+//        }
+//    }
+//
+//    public void createCompany1() {
+//        if(companyService.findByCompanyName("Company1") == null){
+//            Company company = new Company();
+//            company.setCompanyName("Company1");
+//            companyService.save(company);
+//        }
+//    }
+
     @GetMapping
-    public List<UserDto> getAllUsers () {
+    public List<UserDto> getAllUsers() {
         return userService.findAll();
     }
 
     @PostMapping("/makeAdmin/{userId}")
-    public UserDto elevateToAdmin (@PathVariable Integer userId) {
+    public UserDto elevateToAdmin(@PathVariable Integer userId) {
         return userService.elevateUserToAdmin(userId);
     }
 }
