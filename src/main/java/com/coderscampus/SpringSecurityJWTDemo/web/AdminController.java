@@ -38,8 +38,10 @@ public class AdminController {
             adminUser.setLastName("User");
             adminUser.setEmail("admin@email.com");
             adminUser.setPassword(passwordEncoder.encode("adminPassword"));
-            Authority adminAuth = new Authority("SUPER", adminUser);
+            Authority adminAuth = new Authority("ADMIN", adminUser);
+            Authority superAuth = new Authority("SUPER", adminUser);
             adminUser.setAuthorities(Collections.singletonList(adminAuth));
+            adminUser.setAuthorities(Collections.singletonList(superAuth));
             userService.save(adminUser);
         }
     }
