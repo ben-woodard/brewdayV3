@@ -8,6 +8,7 @@ import com.coderscampus.SpringSecurityJWTDemo.service.CompanyService;
 import com.coderscampus.SpringSecurityJWTDemo.service.impl.UserServiceImpl;
 import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -35,23 +36,31 @@ public class AdminController {
 
     public void createAdminUser() {
         if (userService.findUserByEmail("admin@email.com").isEmpty() && companyService.findByCompanyName("Company1") == null) {
-
-            User adminUser = new User();
-            adminUser.setFirstName("Admin");
-            adminUser.setLastName("User");
-            adminUser.setEmail("admin@email.com");
-
-            adminUser.setPassword(passwordEncoder.encode("password"));
-            Authority adminAuth = new Authority("ROLE_ADMIN", adminUser);
-            adminUser.setAuthorities(Collections.singletonList(adminAuth));
-            userService.save(adminUser);
-
+            // Create the company and save it first
             Company company = new Company();
             company.setCompanyName("Company1");
             companyService.save(company);
 
+            // Create the admin user
+            User adminUser = new User();
+            adminUser.setFirstName("Admin");
+            adminUser.setLastName("User");
+            adminUser.setEmail("admin@email.com");
+            adminUser.setPassword(passwordEncoder.encode("password"));
+
+            // Set the company for the user
             adminUser.setCompany(company);
+
+            // Create the authority for the user
+            Authority adminAuth = new Authority("ROLE_ADMIN", adminUser);
+            adminUser.setAuthorities(Collections.singletonList(adminAuth));
+
+            // Save the user with the company set
+            userService.save(adminUser);
+
+            // Add the user to the company's user list and save the company again (if needed)
             company.getUsers().add(adminUser);
+            companyService.save(company);
         }
     }
 
@@ -79,6 +88,11 @@ public class AdminController {
     @GetMapping
     public List<UserDto> getAllUsers() {
         return userService.findAll();
+    }
+
+    @GetMapping("/{companyId}")
+    public List<UserDto> getAllUsersByCompany(@PathVariable Long companyId) {
+        return userService.findAllUsersByCompany(companyId);
     }
 
     @PostMapping("/makeAdmin/{userId}")

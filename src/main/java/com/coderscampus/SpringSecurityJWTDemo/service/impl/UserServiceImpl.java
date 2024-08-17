@@ -5,6 +5,7 @@ import com.coderscampus.SpringSecurityJWTDemo.domain.User;
 
 import com.coderscampus.SpringSecurityJWTDemo.dto.UserDto;
 import com.coderscampus.SpringSecurityJWTDemo.exceptions.BadRequestException;
+import com.coderscampus.SpringSecurityJWTDemo.exceptions.NotFoundException;
 import com.coderscampus.SpringSecurityJWTDemo.mappers.UserMapper;
 import com.coderscampus.SpringSecurityJWTDemo.service.UserService;
 import org.slf4j.Logger;
@@ -102,6 +103,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findUserById(Integer userId) {
         return userRepository.findById(userId).orElse(null);
+    }
+
+    @Override
+    public List<UserDto> findAllUsersByCompany(Long companyId) {
+        List<User> users = userRepository.findAllUsersByCompany_companyId(companyId);
+        if(users.isEmpty()){
+            throw new NotFoundException("There are no users attached to this company");
+        }
+        return userMapper.entityListToDto(users);
     }
 
 

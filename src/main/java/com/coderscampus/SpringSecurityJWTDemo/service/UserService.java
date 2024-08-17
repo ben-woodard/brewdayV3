@@ -18,4 +18,6 @@ public interface UserService {
     List<UserDto> findAll(User user);
 
     User findUserById(Integer userId);
+
+    List<UserDto> findAllUsersByCompany(Long companyId);
 }

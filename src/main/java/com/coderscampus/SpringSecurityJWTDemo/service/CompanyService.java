@@ -1,6 +1,9 @@
 package com.coderscampus.SpringSecurityJWTDemo.service;
 
 import com.coderscampus.SpringSecurityJWTDemo.domain.Company;
+import com.coderscampus.SpringSecurityJWTDemo.dto.UserDto;
+
+import java.util.List;
 
 public interface CompanyService {
     Company findByCompanyName(String companyName);
@@ -8,4 +11,5 @@ public interface CompanyService {
     void save(Company company);
 
     Company findById(Long companyId);
+
 }

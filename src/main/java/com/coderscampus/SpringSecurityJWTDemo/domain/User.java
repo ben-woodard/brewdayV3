@@ -4,6 +4,8 @@ import java.io.Serial;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -36,9 +38,11 @@ public class User implements UserDetails {
     private String password;
     @ManyToOne
     @JoinColumn(name = "company_id")
+    @JsonIgnore
     private Company company;
     @ManyToOne
     @JoinColumn(name = "requestCompany_id")
+    @JsonIgnore
     private Company requestedCompany;
     @Setter
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
