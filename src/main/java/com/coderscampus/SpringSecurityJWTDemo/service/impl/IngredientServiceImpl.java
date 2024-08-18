@@ -21,73 +21,93 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class IngredientServiceImpl implements IngredientService {
+public class IngredientServiceImpl  implements IngredientService{
 
-    private final IngredientMapper ingredientMapper;
-    private final UserService userService;
-    private final IngredientRepository ingredientRepo;
+//    private final IngredientMapper ingredientMapper;
+//    private final UserService userService;
+//    private final IngredientRepository ingredientRepo;
 
     @Override
     public IngredientDto saveIngredient(IngredientDto ingredientDto, Integer userId) {
-        Ingredient ingredient = ingredientMapper.dtoToEntity(ingredientDto);
-        User user = userService.findById(userId);
-        if(user == null) {
-            throw new NotFoundException("Could not find a user with the provided id to add this ingredient to.");
-        }
-        ingredient.setUser(user);
-        user.getIngredients().add(ingredient);
-        return ingredientMapper.entityToDto(ingredientRepo.save(ingredient));
-
+        return null;
     }
 
     @Override
     public List<IngredientDto> findAllByUser(Integer userId) {
-        User user = userService.findById(userId);
-        if(user == null) {
-            throw new NotFoundException("Could not find a user with the provided id.");
-        }
-        List<Ingredient> ingredients = ingredientRepo.findAllByUser(user);
-        ingredients.sort(Comparator.comparing(Ingredient::getIngredientName));
-        return ingredientMapper.entityListToDtoList(ingredients);
+        return null;
     }
 
     @Override
     public IngredientDto updateIngredient(Long ingredientId, IngredientDto ingredientDto) {
-        Ingredient dbIngredient = ingredientRepo.findById(ingredientId).orElse(null);
-        if(dbIngredient == null) {
-            throw new NotFoundException("Could not find an ingredient with the provided id to update");
-        }
-        Ingredient ingredient = ingredientMapper.dtoToEntity(ingredientDto);
-        ingredient.setUser(dbIngredient.getUser());
-        return ingredientMapper.entityToDto(ingredientRepo.saveAndFlush(ingredient));
+        return null;
     }
 
     @Override
-    @Transactional
     public ResponseEntity<String> deleteIngredient(Long ingredientId) {
-        Ingredient ingredient = checkIngredientNull(ingredientId);
-        if (ingredient == null) {
-            throw new NotFoundException("Could not find an ingredient with the provided id");
-        }
-        ingredient.setUser(null);
-        ingredient.getOrders().clear();
-        ingredient.getRecipes().clear();
-        ingredientRepo.delete(ingredient);
-
-
-        if (checkIngredientNull(ingredientId) == null) {
-            return ResponseEntity.ok().body("{\"message\": \"Item successfully deleted\"}");
-        } else {
-            throw new BadRequestException("Failed to delete the inventory item");
-        }
-    }
-
-    public Ingredient checkIngredientNull(Long ingredientId) {
-        Ingredient ingredient = ingredientRepo.findById(ingredientId).orElse(null);
-        if(ingredient != null) {
-           return ingredient;
-        }
         return null;
     }
+
+//    @Override
+//    public IngredientDto saveIngredient(IngredientDto ingredientDto, Integer userId) {
+//        Ingredient ingredient = ingredientMapper.dtoToEntity(ingredientDto);
+//        User user = userService.findById(userId);
+//        if(user == null) {
+//            throw new NotFoundException("Could not find a user with the provided id to add this ingredient to.");
+//        }
+//        ingredient.setUser(user);
+//        user.getIngredients().add(ingredient);
+//        return ingredientMapper.entityToDto(ingredientRepo.save(ingredient));
+//
+//    }
+//
+//    @Override
+//    public List<IngredientDto> findAllByUser(Integer userId) {
+//        User user = userService.findById(userId);
+//        if(user == null) {
+//            throw new NotFoundException("Could not find a user with the provided id.");
+//        }
+//        List<Ingredient> ingredients = ingredientRepo.findAllByUser(user);
+//        ingredients.sort(Comparator.comparing(Ingredient::getIngredientName));
+//        return ingredientMapper.entityListToDtoList(ingredients);
+//    }
+//
+//    @Override
+//    public IngredientDto updateIngredient(Long ingredientId, IngredientDto ingredientDto) {
+//        Ingredient dbIngredient = ingredientRepo.findById(ingredientId).orElse(null);
+//        if(dbIngredient == null) {
+//            throw new NotFoundException("Could not find an ingredient with the provided id to update");
+//        }
+//        Ingredient ingredient = ingredientMapper.dtoToEntity(ingredientDto);
+//        ingredient.setUser(dbIngredient.getUser());
+//        return ingredientMapper.entityToDto(ingredientRepo.saveAndFlush(ingredient));
+//    }
+//
+//    @Override
+//    @Transactional
+//    public ResponseEntity<String> deleteIngredient(Long ingredientId) {
+//        Ingredient ingredient = checkIngredientNull(ingredientId);
+//        if (ingredient == null) {
+//            throw new NotFoundException("Could not find an ingredient with the provided id");
+//        }
+//        ingredient.setUser(null);
+//        ingredient.getOrders().clear();
+//        ingredient.getRecipes().clear();
+//        ingredientRepo.delete(ingredient);
+//
+//
+//        if (checkIngredientNull(ingredientId) == null) {
+//            return ResponseEntity.ok().body("{\"message\": \"Item successfully deleted\"}");
+//        } else {
+//            throw new BadRequestException("Failed to delete the inventory item");
+//        }
+//    }
+//
+//    public Ingredient checkIngredientNull(Long ingredientId) {
+//        Ingredient ingredient = ingredientRepo.findById(ingredientId).orElse(null);
+//        if(ingredient != null) {
+//           return ingredient;
+//        }
+//        return null;
+//    }
 
 }

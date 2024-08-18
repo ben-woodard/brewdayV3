@@ -1,5 +1,6 @@
 package com.coderscampus.SpringSecurityJWTDemo.web;
 
+import com.coderscampus.SpringSecurityJWTDemo.domain.Company;
 import com.coderscampus.SpringSecurityJWTDemo.dto.response.AuthResponse;
 import com.coderscampus.SpringSecurityJWTDemo.dto.response.JwtAuthenticationResponse;
 import com.coderscampus.SpringSecurityJWTDemo.util.CookieUtils;
@@ -42,7 +43,8 @@ public class AuthenticationController {
             Cookie accessTokenCookie = CookieUtils.createAccessTokenCookie(jwtAuthenticationResponse.token());
             Cookie refreshTokenCookie = CookieUtils.createRefreshTokenCookie(jwtAuthenticationResponse.refreshToken());
             String accessToken = jwtService.generateToken(user);
-            AuthResponse authResponse = new AuthResponse(user, accessTokenCookie, refreshTokenCookie, accessToken);
+            Company company = user.getCompany();
+            AuthResponse authResponse = new AuthResponse(user, accessTokenCookie, refreshTokenCookie, accessToken, company);
             return ResponseEntity.ok(authResponse);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not found");

@@ -4,6 +4,8 @@ import java.io.Serial;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -29,27 +31,23 @@ public class User implements UserDetails {
     @Setter
     @Getter
     private String lastName;
-    @Getter
-    @Setter
-    private String companyName;
     @Setter
     @Getter
     private String email;
     @Setter
     private String password;
+    @ManyToOne
+    @JoinColumn(name = "company_id")
+    @JsonIgnore
+    private Company company;
+    @ManyToOne
+    @JoinColumn(name = "requestCompany_id")
+    @JsonIgnore
+    private Company requestedCompany;
     @Setter
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JsonIgnoreProperties("user")
     private List<Authority> authorities = new ArrayList<>();
-    @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JsonIgnoreProperties("user")
-    private List<Product> products = new ArrayList<>();
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JsonIgnoreProperties("user")
-    private List<Order> orders = new ArrayList<>();
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
-    @JsonIgnoreProperties("user")
-    private List<Ingredient> ingredients = new ArrayList<>();
 
     @Override
     public Collection<Authority> getAuthorities() {
@@ -114,6 +112,19 @@ public class User implements UserDetails {
 
     public User build () {
         return this;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", company=" + (company != null ? company.getCompanyName() : "null") +  // Avoid full Company object to prevent circular reference
+                ", requestedCompany=" + (requestedCompany != null ? requestedCompany.getCompanyName() : "null") +  // Avoid full Company object to prevent circular reference
+                ", authorities=" + authorities.stream().map(Authority::getAuthority).toList() +  // Include authority names only
+                '}';
     }
 
 }

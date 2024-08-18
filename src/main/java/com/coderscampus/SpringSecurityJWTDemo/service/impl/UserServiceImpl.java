@@ -9,7 +9,6 @@ import com.coderscampus.SpringSecurityJWTDemo.mappers.UserMapper;
 import com.coderscampus.SpringSecurityJWTDemo.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -94,26 +93,10 @@ public class UserServiceImpl implements UserService {
         userRepository.save(adminUser);
     }
 
-    @Override
-    public List<UserDto> findAll(User user) {
-        return null;
-    }
 
     @Override
     public User findUserById(Integer userId) {
         return userRepository.findById(userId).orElse(null);
     }
 
-
-//    public User loadUserByUsername(String username) {
-//        User user = userRepository.findByEmail(username)
-//                .orElseThrow(() -> new UsernameNotFoundException("User not found" + username));
-//
-//        List<GrantedAuthority> grantedAuthorities = user.getAuthorities().stream()
-//                .map(auth -> new SimpleGrantedAuthority(auth.getAuthority()))
-//                .collect(Collectors.toList());
-//
-//        return user;
-//
-//    }
 }

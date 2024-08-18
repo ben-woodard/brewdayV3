@@ -3,6 +3,7 @@ package com.coderscampus.SpringSecurityJWTDemo.web;
 import com.coderscampus.SpringSecurityJWTDemo.dto.IngredientDto;
 import com.coderscampus.SpringSecurityJWTDemo.service.IngredientService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +22,7 @@ public class InventoryController {
         return ingredientService.findAllByUser(userId);
     }
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/{userId}/create")
     public IngredientDto postCreateIngredient(@RequestBody IngredientDto ingredientDto, @PathVariable Integer userId) {
         return ingredientService.saveIngredient(ingredientDto, userId);
