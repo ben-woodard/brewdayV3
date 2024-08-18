@@ -1,6 +1,7 @@
 package com.coderscampus.SpringSecurityJWTDemo.service.impl;
 
 import com.coderscampus.SpringSecurityJWTDemo.domain.Authority;
+import com.coderscampus.SpringSecurityJWTDemo.domain.Company;
 import com.coderscampus.SpringSecurityJWTDemo.domain.User;
 
 import com.coderscampus.SpringSecurityJWTDemo.dto.UserDto;
@@ -105,14 +106,16 @@ public class UserServiceImpl implements UserService {
         return userRepository.findById(userId).orElse(null);
     }
 
-    @Override
-    public List<UserDto> findAllUsersByCompany(Long companyId) {
-        List<User> users = userRepository.findAllUsersByCompany_companyId(companyId);
-        if(users.isEmpty()){
-            throw new NotFoundException("There are no users attached to this company");
-        }
-        return userMapper.entityListToDto(users);
-    }
+//    @Override
+//    public List<UserDto> findAllUsersByCompany(Long companyId) {
+//        List<User> users = userRepository.findAllUsersByCompany_companyId(companyId);
+//        if(users.isEmpty()){
+//            throw new NotFoundException("There are no users attached to this company");
+//        }
+//        return userMapper.entityListToDto(users);
+//    }
+
+
 
 
 //    public User loadUserByUsername(String username) {

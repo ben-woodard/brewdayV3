@@ -19,5 +19,5 @@ public interface UserService {
 
     User findUserById(Integer userId);
 
-    List<UserDto> findAllUsersByCompany(Long companyId);
+
 }

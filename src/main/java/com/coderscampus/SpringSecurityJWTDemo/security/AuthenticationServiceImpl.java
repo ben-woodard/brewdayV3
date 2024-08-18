@@ -21,6 +21,8 @@ import com.coderscampus.SpringSecurityJWTDemo.domain.User;
 import com.coderscampus.SpringSecurityJWTDemo.repository.UserRepository;
 import com.coderscampus.SpringSecurityJWTDemo.service.RefreshTokenService;
 
+import java.util.Objects;
+
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
 	
@@ -86,8 +88,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         if(company == null) {
             throw new NotFoundException("There was no Existing Company Found with this Id");
         }
-        company.getRequestedUsers().add(user);
-        user.setRequestedCompany(company);
+        if(!(user.getEmail()).equals("admin@email.com")){
+            company.getRequestedUsers().add(user);
+            user.setRequestedCompany(company);
+            companyService.save(company);
+            userRepository.saveAndFlush(user);
+            company.getRequestedUsers().forEach(System.out::println);
+        }
     }
 }
 

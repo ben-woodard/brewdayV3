@@ -12,4 +12,5 @@ public interface CompanyService {
 
     Company findById(Long companyId);
 
+    List<UserDto> findAllRequestedUsers(Long companyId);
 }
