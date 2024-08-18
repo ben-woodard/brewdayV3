@@ -15,9 +15,8 @@ public interface UserService {
 
     void save(User adminUser);
 
-    List<UserDto> findAll(User user);
-
     User findUserById(Integer userId);
+
 
 
 }

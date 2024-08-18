@@ -82,8 +82,7 @@ public class AdminController {
 
     @GetMapping("/{companyId}")
     public List<UserDto> getAllUsersByCompany(@PathVariable Long companyId) {
-//        return userService.findAllUsersByCompany(companyId);
-        return null;
+      return companyService.findAllUsers(companyId);
     }
 
     @PostMapping("/makeAdmin/{userId}")
@@ -93,8 +92,11 @@ public class AdminController {
 
     @GetMapping("/requestedUsers/{companyId}")
     public List<UserDto> getRequestedUsers(@PathVariable Long companyId) {
-        List<UserDto> users = companyService.findAllRequestedUsers(companyId);
-        users.forEach(System.out::println);
         return companyService.findAllRequestedUsers(companyId);
+    }
+
+    @PostMapping("/addUser/{userId}/{companyId}")
+    public List<UserDto> addUserToCompany(@PathVariable Integer userId, @PathVariable Long companyId) {
+        return companyService.addUserToCompany(userId, companyId);
     }
 }

@@ -1,17 +1,14 @@
 package com.coderscampus.SpringSecurityJWTDemo.service.impl;
 
 import com.coderscampus.SpringSecurityJWTDemo.domain.Authority;
-import com.coderscampus.SpringSecurityJWTDemo.domain.Company;
 import com.coderscampus.SpringSecurityJWTDemo.domain.User;
 
 import com.coderscampus.SpringSecurityJWTDemo.dto.UserDto;
 import com.coderscampus.SpringSecurityJWTDemo.exceptions.BadRequestException;
-import com.coderscampus.SpringSecurityJWTDemo.exceptions.NotFoundException;
 import com.coderscampus.SpringSecurityJWTDemo.mappers.UserMapper;
 import com.coderscampus.SpringSecurityJWTDemo.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -96,37 +93,10 @@ public class UserServiceImpl implements UserService {
         userRepository.save(adminUser);
     }
 
-    @Override
-    public List<UserDto> findAll(User user) {
-        return null;
-    }
 
     @Override
     public User findUserById(Integer userId) {
         return userRepository.findById(userId).orElse(null);
     }
 
-//    @Override
-//    public List<UserDto> findAllUsersByCompany(Long companyId) {
-//        List<User> users = userRepository.findAllUsersByCompany_companyId(companyId);
-//        if(users.isEmpty()){
-//            throw new NotFoundException("There are no users attached to this company");
-//        }
-//        return userMapper.entityListToDto(users);
-//    }
-
-
-
-
-//    public User loadUserByUsername(String username) {
-//        User user = userRepository.findByEmail(username)
-//                .orElseThrow(() -> new UsernameNotFoundException("User not found" + username));
-//
-//        List<GrantedAuthority> grantedAuthorities = user.getAuthorities().stream()
-//                .map(auth -> new SimpleGrantedAuthority(auth.getAuthority()))
-//                .collect(Collectors.toList());
-//
-//        return user;
-//
-//    }
 }
