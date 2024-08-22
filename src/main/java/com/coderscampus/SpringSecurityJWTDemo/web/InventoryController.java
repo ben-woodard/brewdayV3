@@ -17,15 +17,15 @@ public class InventoryController {
     private final IngredientService ingredientService;
 //    private final UserServiceImpl userService;
 
-    @GetMapping("{userId}")
-    public List<IngredientDto> getAllIngredientsByUser(@PathVariable Integer userId) {
-        return ingredientService.findAllByUser(userId);
+    @GetMapping("/{companyId}")
+    public List<IngredientDto> getAllIngredientsByUser(@PathVariable Long companyId) {
+        return ingredientService.findAllByCompany(companyId);
     }
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/{userId}/create")
-    public IngredientDto postCreateIngredient(@RequestBody IngredientDto ingredientDto, @PathVariable Integer userId) {
-        return ingredientService.saveIngredient(ingredientDto, userId);
+    @PostMapping("/{companyId}/create")
+    public IngredientDto postCreateIngredient(@RequestBody IngredientDto ingredientDto, @PathVariable Long companyId) {
+        return ingredientService.saveIngredient(ingredientDto, companyId);
     }
 
     @PatchMapping("/{ingredientId}")

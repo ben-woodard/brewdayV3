@@ -10,11 +10,11 @@ import java.util.List;
 
 public interface IngredientService {
 
-    IngredientDto saveIngredient(IngredientDto ingredientDto, Integer userId);
-
-    List<IngredientDto> findAllByUser(Integer userId);
+    IngredientDto saveIngredient(IngredientDto ingredientDto, Long companyId);
 
     IngredientDto updateIngredient(Long ingredientId, IngredientDto ingredientDto);
 
     ResponseEntity<String> deleteIngredient(Long ingredientId);
+
+    List<IngredientDto> findAllByCompany(Long companyId);
 }
