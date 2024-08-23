@@ -1,9 +1,6 @@
 package com.coderscampus.SpringSecurityJWTDemo.dto;
 
-import com.coderscampus.SpringSecurityJWTDemo.domain.Ingredient;
-import com.coderscampus.SpringSecurityJWTDemo.domain.Order;
-import com.coderscampus.SpringSecurityJWTDemo.domain.Recipe;
-import com.coderscampus.SpringSecurityJWTDemo.domain.User;
+import com.coderscampus.SpringSecurityJWTDemo.domain.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -29,7 +26,7 @@ public class IngredientDto {
 
     private Ingredient.unitOfMeasurement unitOfMeasurement;
 
-    private User user;
+    private Company company;
 
 
 }
