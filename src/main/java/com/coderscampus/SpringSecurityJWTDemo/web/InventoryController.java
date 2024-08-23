@@ -28,11 +28,13 @@ public class InventoryController {
         return ingredientService.saveIngredient(ingredientDto, companyId);
     }
 
+    @ResponseStatus(HttpStatus.ACCEPTED)
     @PatchMapping("/{ingredientId}")
     public IngredientDto updateIngredient(@PathVariable Long ingredientId, @RequestBody IngredientDto ingredientDto) {
         return ingredientService.updateIngredient(ingredientId, ingredientDto);
     }
 
+    @ResponseStatus(HttpStatus.ACCEPTED)
     @DeleteMapping("/{ingredientId}")
     public ResponseEntity<String> deleteIngredient(@PathVariable Long ingredientId){
         return ingredientService.deleteIngredient(ingredientId);

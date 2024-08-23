@@ -31,11 +31,6 @@ public class IngredientServiceImpl  implements IngredientService{
     private final IngredientRepository ingredientRepo;
 
     @Override
-    public IngredientDto updateIngredient(Long ingredientId, IngredientDto ingredientDto) {
-        return null;
-    }
-
-    @Override
     public List<IngredientDto> findAllByCompany(Long companyId) {
         Company company =  companyService.findById(companyId);
         if(company == null) {
@@ -68,17 +63,17 @@ public class IngredientServiceImpl  implements IngredientService{
 //        return ingredientMapper.entityListToDtoList(ingredients);
 //    }
 //
-//    @Override
-//    public IngredientDto updateIngredient(Long ingredientId, IngredientDto ingredientDto) {
-//        Ingredient dbIngredient = ingredientRepo.findById(ingredientId).orElse(null);
-//        if(dbIngredient == null) {
-//            throw new NotFoundException("Could not find an ingredient with the provided id to update");
-//        }
-//        Ingredient ingredient = ingredientMapper.dtoToEntity(ingredientDto);
-//        ingredient.setUser(dbIngredient.getUser());
-//        return ingredientMapper.entityToDto(ingredientRepo.saveAndFlush(ingredient));
-//    }
-//
+    @Override
+    public IngredientDto updateIngredient(Long ingredientId, IngredientDto ingredientDto) {
+        Ingredient dbIngredient = ingredientRepo.findById(ingredientId).orElse(null);
+        if(dbIngredient == null) {
+            throw new NotFoundException("Could not find an ingredient with the provided id to update");
+        }
+        Ingredient ingredient = ingredientMapper.dtoToEntity(ingredientDto);
+        ingredient.setCompany(dbIngredient.getCompany());
+        return ingredientMapper.entityToDto(ingredientRepo.saveAndFlush(ingredient));
+    }
+
     @Override
     @Transactional
     public ResponseEntity<String> deleteIngredient(Long ingredientId) {
